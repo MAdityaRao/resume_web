@@ -23,7 +23,7 @@ export default function About() {
                 alt="Aditya"
                 fill
                 sizes="(max-width: 768px) 100vw, 400px"
-                className="object-cover grayscale contrast-110"
+                className="object-cover"
                 priority
               />
             </div>
