@@ -1,33 +1,37 @@
 "use client";
 
 import { motion } from "framer-motion";
-import SignalDivider from "./SignalDivider";
 import { skills } from "@/lib/content";
 
 export default function Skills() {
   return (
-    <section id="skills" className="px-6 py-24 border-b border-border">
+    <section id="skills" className="px-6 py-24">
       <div className="mx-auto max-w-6xl">
-        <SignalDivider code="SIG_03" label="Toolset" />
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-10">
+        <h2 className="text-4xl font-display font-bold text-white mb-16">Technical Expertise</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {skills.map((group, i) => (
             <motion.div
               key={group.group}
-              initial={{ opacity: 0, y: 12 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.5, delay: i * 0.05 }}
+              transition={{ delay: i * 0.1 }}
+              className="glass p-6 rounded-2xl border border-white/5 hover:border-purple/50 transition-colors"
             >
-              <h3 className="font-mono text-xs uppercase tracking-[0.15em] text-cyan mb-4">
+              <h3 className="text-white font-semibold mb-6 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-purple" />
                 {group.group}
               </h3>
-              <ul className="space-y-2">
+              <div className="flex flex-wrap gap-2">
                 {group.items.map((item) => (
-                  <li key={item} className="text-ink text-sm">
+                  <motion.span
+                    key={item}
+                    whileHover={{ scale: 1.05 }}
+                    className="px-3 py-1 rounded-md bg-white/5 border border-white/5 text-sm text-slate-300 hover:text-white transition-colors"
+                  >
                     {item}
-                  </li>
+                  </motion.span>
                 ))}
-              </ul>
+              </div>
             </motion.div>
           ))}
         </div>

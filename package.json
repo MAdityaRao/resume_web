@@ -11,6 +11,7 @@
   "dependencies": {
     "@livekit/protocol": "1.29.2",
     "clsx": "2.1.1",
+    "emailjs-com": "^3.2.0",
     "framer-motion": "11.11.17",
     "livekit-client": "^2.20.0",
     "livekit-server-sdk": "2.9.2",

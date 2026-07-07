@@ -3,29 +3,40 @@
 @tailwind utilities;
 
 :root {
-  --font-display: "Space Grotesk", sans-serif;
+  --font-display: "Geist", serif;
   --font-body: "Inter", sans-serif;
   --font-mono: "IBM Plex Mono", monospace;
+  --bg-color: #121110;
+  --text-primary: #d6d3d1;
+  --accent-primary: #a8a29e;
+  --accent-secondary: #854d0e;
 }
 
 * {
   scroll-behavior: smooth;
+  border-color: #292524;
 }
 
 html {
-  background-color: #090c10;
+  background-color: var(--bg-color);
 }
 
 body {
-  background-color: #090c10;
-  color: #edf1f5;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
 }
 
+.glass {
+  background: rgba(28, 25, 23, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(168, 162, 158, 0.1);
+}
+
 ::selection {
-  background: #4cc9f0;
-  color: #090c10;
+  background: rgba(124, 108, 255, 0.3);
+  color: #fff;
 }
 
 /* thin custom scrollbar for transcript panel */

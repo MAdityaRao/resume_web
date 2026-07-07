@@ -15,10 +15,21 @@ const config: Config = {
         ink: "#F2F5F8",
         muted: "#8D98A8",
         faint: "#5B6577",
-        violet: "#7C6CFF",
+        violet: {
+          DEFAULT: "#7C6CFF",
+          light: "#9D8EFF",
+        },
         cyan: {
           DEFAULT: "#2BC8EC",
           dim: "#1D4C5C",
+          glow: "#00E5FF",
+        },
+        purple: {
+          DEFAULT: "#A855F7",
+        },
+        glass: {
+          light: "rgba(255, 255, 255, 0.05)",
+          dark: "rgba(0, 0, 0, 0.2)",
         },
         mint: "#33D6A0",
         amber: {

@@ -15,12 +15,12 @@ export const profile = {
     "Tool-based agent architectures",
   ],
   summary:
-    "Second-year B.Sc Data Analytics student with real production experience building AI systems — from LLM-powered voice agents handling live inbound calls to automated data pipelines integrated with cloud infrastructure. Comfortable across the full stack: audio pipelines, LLM reasoning layers, database design, and cloud deployment. Focused on shipping things that work.",
+    "Third year B.Sc Data Analytics student with real production experience building AI systems — from LLM-powered voice agents handling live inbound calls to automated data pipelines integrated with cloud infrastructure. Comfortable across the full stack: audio pipelines, LLM reasoning layers, database design, and cloud deployment. Focused on shipping things that work.",
 };
 
 export const experience = [
   {
-    role: "AI Developer Intern",
+    role: "AI Developer (Part-time)",
     org: "Torq Designs",
     location: "Karnataka",
     period: "Aug 2025 — Present",

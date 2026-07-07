@@ -1,17 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
-import SignalDivider from "./SignalDivider";
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Waveform from "./Waveform";
 import { useAgentSession } from "@/lib/useAgentSession";
 
 export default function AgentConsole() {
   const {
     status,
-    errorMessage,
     transcript,
-    agentSpeaking,
     connect,
     disconnect,
     sendChatMessage,
@@ -19,7 +16,14 @@ export default function AgentConsole() {
   } = useAgentSession();
 
   const [draft, setDraft] = useState("");
+  const scrollRef = useRef<HTMLDivElement>(null);
   const live = status === "live";
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [transcript]);
 
   async function handleSend(e: React.FormEvent) {
     e.preventDefault();
@@ -29,112 +33,77 @@ export default function AgentConsole() {
   }
 
   return (
-    <section id="agent" className="px-6 py-24 border-b border-border">
-      <div className="mx-auto max-w-6xl">
-        <SignalDivider code="SIG_04" label="Live agent" />
+    <section id="agent" className="px-6 py-24">
+      <div className="mx-auto max-w-3xl">
+        <div className="glass rounded-3xl border border-white/5 overflow-hidden flex flex-col h-[600px]">
+          {/* Header */}
+          <div className="p-6 border-b border-white/5 flex items-center justify-between bg-black/20">
+            <div>
+              <h2 className="text-lg font-semibold text-white">AI Assistant</h2>
+              <p className="text-xs text-slate-500 uppercase tracking-wider font-mono">
+                {live ? "Live Connection" : "Offline"}
+              </p>
+            </div>
+            <StatusPill status={status} />
+          </div>
 
-        <div className="border border-border rounded-2xl bg-panel overflow-hidden">
-          <div className="p-7 border-b border-border">
-            <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
-              <div>
-                <h3 className="font-display text-xl text-ink">Ask about Aditya</h3>
-                <p className="text-muted text-sm mt-1 max-w-xl">
-                  Press the mic to join, then talk or type in the same conversation. The agent
-                  answers from this resume and can take a job description mid-call, spoken or typed.
-                </p>
+          {/* Transcript Area */}
+          <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin">
+            {transcript.length === 0 ? (
+              <div className="h-full flex flex-col items-center justify-center text-slate-500 text-sm italic">
+                Start the conversation to begin...
               </div>
-              <StatusPill status={status} />
-            </div>
-
-            <Waveform mode="live" getLevels={getLevels} active={live} height={110} />
-
-            <div className="flex items-center gap-3 mt-5">
-              {!live ? (
-                <button
-                  onClick={connect}
-                  disabled={status === "connecting"}
-                  className="focus-ring flex items-center gap-3 bg-ink text-bg font-mono text-sm px-6 py-3 rounded-full hover:bg-cyan transition-colors disabled:opacity-50"
-                >
-                  <MicIcon />
-                  {status === "connecting" ? "Connecting…" : "Join and start talking"}
-                </button>
-              ) : (
-                <button
-                  onClick={disconnect}
-                  className="focus-ring flex items-center gap-3 border border-border text-ink font-mono text-sm px-6 py-3 rounded-full hover:border-amber transition-colors"
-                >
-                  <span className="h-2 w-2 rounded-full bg-amber" />
-                  Leave
-                </button>
-              )}
-              {live && (
-                <span className="font-mono text-xs text-faint">
-                  {agentSpeaking ? "agent is speaking" : "mic is live, or type below"}
-                </span>
-              )}
-            </div>
-
-            {errorMessage && (
-              <p className="font-mono text-xs text-amber mt-4">{errorMessage}</p>
+            ) : (
+              <AnimatePresence>
+                {transcript.map((line, i) => (
+                  <motion.div
+                    key={line.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className={`flex flex-col ${line.from === "you" ? "items-end" : "items-start"}`}
+                  >
+                    <span className="text-[10px] uppercase text-slate-600 mb-1 px-1">
+                      {line.from === "you" ? "You" : "Assistant"}
+                    </span>
+                    <div className={`px-5 py-3 rounded-2xl max-w-[85%] ${
+                      line.from === "you"
+                        ? "bg-purple text-white rounded-br-none"
+                        : "bg-white/5 text-slate-200 rounded-bl-none border border-white/5"
+                    }`}>
+                      {line.text}
+                    </div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
             )}
           </div>
 
-          <div className="p-7">
-            <h3 className="font-mono text-xs uppercase tracking-[0.15em] text-muted mb-4">
-              Conversation
-            </h3>
-            <div className="transcript-scroll min-h-[220px] max-h-[420px] overflow-y-auto space-y-3 pr-1 mb-5">
-              {transcript.length === 0 && (
-                <p className="text-faint text-sm">
-                  Nothing here yet. Join the room and start speaking, or send a message below
-                  once you&apos;re in.
-                </p>
-              )}
-              {transcript.map((line) => (
-                <motion.div
-                  key={line.id}
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className={`max-w-[85%] rounded-xl px-4 py-2.5 text-sm leading-relaxed ${
-                    line.from === "you"
-                      ? "ml-auto bg-elevated border border-cyan-dim text-ink"
-                      : "bg-elevated border border-amber-dim text-ink"
-                  }`}
-                >
-                  <span className="font-mono text-[10px] uppercase tracking-wider text-faint block mb-1">
-                    {line.from === "you" ? "You" : "Agent"}
-                  </span>
-                  {line.text}
-                </motion.div>
-              ))}
+          {/* Controls & Input */}
+          <div className="p-4 border-t border-white/5 bg-black/20">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="flex-1 h-12 flex items-center">
+                <Waveform mode="live" getLevels={getLevels} active={live} height={40} />
+              </div>
+              <button
+                onClick={live ? disconnect : connect}
+                className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${
+                  live
+                    ? "bg-red-500/10 text-red-400 hover:bg-red-500/20"
+                    : "bg-white text-black hover:bg-slate-200"
+                }`}
+              >
+                {live ? "End Session" : "Connect"}
+              </button>
             </div>
 
-            <form onSubmit={handleSend} className="flex items-end gap-3">
-              <textarea
+            <form onSubmit={handleSend} className="relative">
+              <input
                 value={draft}
                 onChange={(e) => setDraft(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSend(e);
-                  }
-                }}
-                placeholder={
-                  live
-                    ? "Type a message, or paste a job description to tailor the interview…"
-                    : "Join the room above to start typing"
-                }
+                placeholder={live ? "Message your AI assistant..." : "Connect to start chatting..."}
                 disabled={!live}
-                rows={2}
-                className="focus-ring flex-1 bg-elevated border border-border rounded-xl px-4 py-3 text-sm text-ink placeholder:text-faint resize-none disabled:opacity-50"
+                className="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-purple/50 transition-colors"
               />
-              <button
-                type="submit"
-                disabled={!live || !draft.trim()}
-                className="focus-ring font-mono text-xs px-5 py-3 rounded-full border border-border text-ink hover:border-cyan transition-colors disabled:opacity-40"
-              >
-                Send
-              </button>
             </form>
           </div>
         </div>
@@ -144,37 +113,11 @@ export default function AgentConsole() {
 }
 
 function StatusPill({ status }: { status: string }) {
-  const label =
-    status === "live"
-      ? "LIVE"
-      : status === "connecting"
-      ? "CONNECTING"
-      : status === "error"
-      ? "ERROR"
-      : "IDLE";
-  const color =
-    status === "live" ? "text-cyan" : status === "error" ? "text-amber" : "text-faint";
   return (
-    <span className={`font-mono text-[11px] tracking-wider ${color} border border-border rounded-full px-3 py-1`}>
-      {label}
-    </span>
-  );
-}
-
-function MicIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Z"
-        stroke="currentColor"
-        strokeWidth="1.6"
-      />
-      <path
-        d="M19 11a7 7 0 0 1-14 0M12 19v3"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
-    </svg>
+    <div className={`px-2 py-0.5 rounded-full border text-[10px] font-mono uppercase tracking-widest ${
+      status === 'live' ? 'border-cyan/30 text-cyan bg-cyan/5' : 'border-slate-800 text-slate-600'
+    }`}>
+      {status}
+    </div>
   );
 }

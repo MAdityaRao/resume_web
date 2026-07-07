@@ -9,32 +9,14 @@ type Props = {
   height?: number;
 };
 
-// A discrete spectrum stop table — solid color lookups, not a CSS gradient.
-// Grounded in the subject: this is how a real spectrum analyser assigns
-// color by frequency band, not a decorative flourish.
+// Uniform color for a professional, non-AI look.
 const STOPS: [number, string][] = [
-  [0, "124,108,255"], // violet — low band
-  [0.32, "43,200,236"], // cyan
-  [0.58, "51,214,160"], // mint
-  [0.8, "255,182,72"], // amber
-  [1, "255,107,94"], // coral — high band
+  [0, "255, 255, 255"], // white
+  [1, "255, 255, 255"], // white
 ];
 
 function colorAt(t: number) {
-  for (let i = 0; i < STOPS.length - 1; i++) {
-    const [t0, c0] = STOPS[i];
-    const [t1, c1] = STOPS[i + 1];
-    if (t >= t0 && t <= t1) {
-      const localT = (t - t0) / (t1 - t0 || 1);
-      const a = c0.split(",").map(Number);
-      const b = c1.split(",").map(Number);
-      const r = Math.round(a[0] + (b[0] - a[0]) * localT);
-      const g = Math.round(a[1] + (b[1] - a[1]) * localT);
-      const bch = Math.round(a[2] + (b[2] - a[2]) * localT);
-      return `${r},${g},${bch}`;
-    }
-  }
-  return STOPS[STOPS.length - 1][1];
+  return STOPS[0][1];
 }
 
 export default function Waveform({ mode, getLevels, active = true, height = 160 }: Props) {
