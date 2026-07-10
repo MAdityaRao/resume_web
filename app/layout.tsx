@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Inter, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
+import AmbientBackground from "@/components/Ambientbackground";
 
 const display = Space_Grotesk({
   subsets: ["latin"],
@@ -33,7 +34,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${display.variable} ${body.variable} ${mono.variable}`}>
-      <body>{children}</body>
+      <body>
+        <AmbientBackground />
+        {children}
+      </body>
     </html>
   );
 }

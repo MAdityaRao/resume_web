@@ -22,13 +22,33 @@ export default async function ProjectPage({ params }: { params: { slug: string[]
   const content = fs.readFileSync(filePath, 'utf-8');
 
   return (
-    <div className="min-h-screen bg-slate-950">
-      <article className="px-6 py-24 text-slate-300 max-w-4xl mx-auto prose prose-invert prose-cyan prose-lg prose-headings:font-display prose-p:leading-relaxed">
+    <div className="min-h-screen bg-[#0A0D14] py-16 px-6 md:px-12">
+      <div className="max-w-4xl mx-auto">
         <BackButton />
-        <ReactMarkdown remarkPlugins={[remarkGfm]}>
-          {content}
-        </ReactMarkdown>
-      </article>
+        <article
+          className="
+            mt-8 p-8 md:p-12
+            glass-strong
+            prose prose-lg prose-invert
+            max-w-none
+            prose-headings:text-white
+            prose-p:text-[#F0EDE8]/90
+            prose-li:text-[#F0EDE8]/90
+            prose-strong:text-white
+            prose-code:text-[#FFB648]
+            prose-a:text-[#FFB648]
+            prose-a:no-underline
+            hover:prose-a:underline
+            prose-blockquote:text-white
+            prose-blockquote:border-l-[#FFB648]
+            prose-img:rounded-xl
+          "
+        >
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            {content}
+          </ReactMarkdown>
+        </article>
+      </div>
     </div>
   );
 }

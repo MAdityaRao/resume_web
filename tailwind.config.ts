@@ -50,6 +50,31 @@ const config: Config = {
       transitionTimingFunction: {
         signal: "cubic-bezier(0.16, 1, 0.3, 1)",
       },
+      boxShadow: {
+        "glow": "0 0 40px -8px rgba(255, 182, 72, 0.4)",
+        "glow-cyan": "0 0 40px -8px rgba(43, 200, 236, 0.35)",
+        "glow-purple": "0 0 40px -8px rgba(168, 85, 247, 0.35)",
+        "glass-inset": "inset 0 1px 0 0 rgba(255,255,255,0.06)",
+      },
+      keyframes: {
+        float: {
+          "0%, 100%": { transform: "translate(0, 0)" },
+          "50%": { transform: "translate(20px, -30px)" },
+        },
+        floatSlow: {
+          "0%, 100%": { transform: "translate(0, 0)" },
+          "50%": { transform: "translate(-25px, 25px)" },
+        },
+        borderGlow: {
+          "0%, 100%": { opacity: "0.5" },
+          "50%": { opacity: "1" },
+        },
+      },
+      animation: {
+        float: "float 10s ease-in-out infinite",
+        "float-slow": "floatSlow 14s ease-in-out infinite",
+        "border-glow": "borderGlow 3s ease-in-out infinite",
+      },
       typography: (theme: any) => ({
         invert: {
           css: {
