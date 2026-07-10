@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import LiveDataAnimation from "./LiveDataAnimation";
 import { motion } from "framer-motion";
 import { experience, education, profile } from "@/lib/content";
 
@@ -24,7 +25,10 @@ export default function About() {
               className="object-cover object-top"
               priority
             />
-            <div className="absolute bottom-6 left-6 right-6 p-4 glass rounded-xl border border-white/10 text-white text-sm font-medium">
+            <div className="absolute inset-0 z-10 pointer-events-none">
+              <LiveDataAnimation />
+            </div>
+            <div className="absolute bottom-6 left-6 right-6 p-4 glass rounded-xl border border-white/10 text-white text-sm font-medium z-20">
               {profile.location}
             </div>
           </motion.div>

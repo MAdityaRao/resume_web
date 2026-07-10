@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { profile } from "@/lib/content";
 import { useAgentSession } from "@/lib/useAgentSession";
+import LiveDataAnimation from "./LiveDataAnimation";
 import Waveform from "./Waveform";
 
 export default function Hero() {
@@ -75,30 +76,23 @@ export default function Hero() {
         </motion.div>
 
         <div className="w-full max-w-sm glass rounded-3xl p-8 border border-white/10 hover:border-white/20 transition-all flex flex-col items-center">
-          <div className="flex items-center justify-between mb-8 w-full">
-            <div className="flex items-center gap-3">
-              <div className={`relative flex items-center justify-center w-3 h-3`}>
-                <div className={`absolute w-full h-full rounded-full ${live ? 'bg-cyan' : 'bg-slate-600'}`} />
-                {live && <div className="absolute w-full h-full rounded-full bg-cyan animate-ping" />}
-              </div>
-              <p className="text-white font-medium text-sm">Voice Interface</p>
-            </div>
-            <button
-              onClick={live ? disconnect : connect}
-              className="text-[10px] bg-white/5 border border-white/10 px-3 py-1 rounded-full text-slate-300 hover:text-white hover:bg-white/10 transition-all uppercase font-mono tracking-wider"
-            >
-              {live ? "Stop" : "Connect"}
-            </button>
+          <div className="mb-6 w-full">
+            <h3 className="text-white font-medium text-lg mb-2">Hotel Voice Automation</h3>
+            <p className="text-slate-400 text-sm leading-relaxed">
+              Autonomous AI agent for hospitality that manages reservations, captures data, and confirms bookings 24/7.
+            </p>
           </div>
 
-          <div className="h-20 w-full flex items-center justify-center bg-black/20 rounded-2xl border border-white/5 mb-6">
-            <Waveform mode="live" getLevels={getLevels} active={live} height={40} />
+          <div className="relative h-32 w-full flex items-center justify-center bg-black/20 rounded-2xl border border-white/5 mb-6 overflow-hidden">
+             <LiveDataAnimation />
           </div>
 
-          <div className="flex justify-between items-center text-slate-500 text-[10px] font-mono uppercase tracking-widest w-full">
-            <span>{live ? "Status: Active" : "Status: Standby"}</span>
-            <span className="text-cyan">{live ? "Streaming Audio" : "Ready"}</span>
-          </div>
+          <a
+            href="/project/project_readme/hotel_agent"
+            className="w-full py-3 rounded-xl bg-cyan/10 border border-cyan/20 text-cyan text-center font-medium hover:bg-cyan/20 transition-all text-sm"
+          >
+            View Case Study
+          </a>
         </div>
       </div>
     </section>
