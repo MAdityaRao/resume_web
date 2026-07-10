@@ -2,10 +2,9 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import fs from 'fs';
 import path from 'path';
+import BackButton from '@/components/BackButton';
 
 export default async function ProjectPage({ params }: { params: { slug: string[] } }) {
-  // Construct path to the README file
-  // params.slug is an array, e.g., ["project_readme", "resume_agent"]
   const fileName = `${params.slug[params.slug.length - 1]}.md`;
   const filePath = path.join(process.cwd(), 'public', 'project_readme', fileName);
 
@@ -24,11 +23,12 @@ export default async function ProjectPage({ params }: { params: { slug: string[]
 
   return (
     <div className="min-h-screen bg-slate-950">
-        <article className="px-6 py-24 text-slate-300 max-w-4xl mx-auto prose prose-invert prose-cyan prose-lg prose-headings:font-display prose-p:leading-relaxed">
+      <article className="px-6 py-24 text-slate-300 max-w-4xl mx-auto prose prose-invert prose-cyan prose-lg prose-headings:font-display prose-p:leading-relaxed">
+        <BackButton />
         <ReactMarkdown remarkPlugins={[remarkGfm]}>
-            {content}
+          {content}
         </ReactMarkdown>
-        </article>
+      </article>
     </div>
   );
 }
