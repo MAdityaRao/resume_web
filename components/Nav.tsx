@@ -37,7 +37,10 @@ export default function Nav() {
         </nav>
 
         {/* Mobile Menu Toggle */}
-        <button className="md:hidden text-white" onClick={() => setIsOpen(!isOpen)}>
+        <button
+          className="md:hidden text-white font-mono text-sm uppercase tracking-widest hover:text-purple transition-colors"
+          onClick={() => setIsOpen(!isOpen)}
+        >
           {isOpen ? "Close" : "Menu"}
         </button>
       </div>
@@ -51,9 +54,9 @@ export default function Nav() {
             exit={{ opacity: 0, height: 0 }}
             className="md:hidden glass border-t border-white/10 overflow-hidden"
           >
-            <nav className="flex flex-col p-6 gap-4 font-mono text-sm uppercase text-slate-400">
+            <nav className="flex flex-col p-6 gap-4 font-mono text-sm uppercase text-slate-200 items-end">
               {links.map((l) => (
-                <a key={l.href} href={l.href} onClick={() => setIsOpen(false)}>{l.label}</a>
+                <a key={l.href} href={l.href} className="hover:text-white transition-colors" onClick={() => setIsOpen(false)}>{l.label}</a>
               ))}
             </nav>
           </motion.div>

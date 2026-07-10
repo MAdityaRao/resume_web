@@ -9,6 +9,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 4rem; /* h-16 = 4rem */
 }
 
 body {
@@ -30,7 +31,12 @@ body {
   transform: translateY(0);
 }
 
-/* Hero grid */
+.glass {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
 .hero-grid-bg {
   background-image:
     linear-gradient(rgba(74,144,184,0.055) 1px, transparent 1px),
