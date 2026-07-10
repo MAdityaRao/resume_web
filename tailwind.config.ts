@@ -50,8 +50,19 @@ const config: Config = {
       transitionTimingFunction: {
         signal: "cubic-bezier(0.16, 1, 0.3, 1)",
       },
+      typography: (theme: any) => ({
+        invert: {
+          css: {
+            "--tw-prose-body": theme("colors.slate.300"),
+            "--tw-prose-headings": theme("colors.white"),
+            "--tw-prose-links": theme("colors.cyan.DEFAULT"),
+            "--tw-prose-code": theme("colors.cyan.DEFAULT"),
+            "--tw-prose-pre-bg": theme("colors.panel"),
+          },
+        },
+      }),
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/typography")],
 };
 export default config;

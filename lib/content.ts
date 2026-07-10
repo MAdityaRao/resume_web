@@ -53,7 +53,7 @@ export const projects: Project[] = [
       "Accepts a job description live over a data channel and adapts its answers mid-conversation.",
       "Serverless token issuance, explicit agent dispatch on LiveKit Cloud, no persistent backend to manage.",
     ],
-    link: "https://github.com/MAdityaRao/Resume_agent",
+    link: "/project/project_readme/resume_agent",
     metric: "<500ms",
   },
   {
@@ -66,6 +66,7 @@ export const projects: Project[] = [
       "STT/TTS pipeline tuned over LiveKit WebRTC to stay under 500ms end-to-end; intent extraction held above 95% accuracy across test calls.",
       "Booking writes automated directly to Google Sheets, removing manual data entry.",
     ],
+    link: "/project/project_readme/hotel_agent",
     metric: "95%+ accuracy",
   },
   {
@@ -78,18 +79,8 @@ export const projects: Project[] = [
       "Normalised PostgreSQL schema across customers, policies, claims, and call logs; the agent pulls live caller data via asyncpg before each response.",
       "@function_tool pattern for mid-call database lookups triggered by phone number, removing manual policy verification.",
     ],
+    link: "/project/project_readme/insurence_agent",
     metric: "0 manual verification",
-  },
-  {
-    id: "jd-matcher",
-    name: "JD–Resume Matching System",
-    role: "Applied RAG",
-    stack: ["Python", "Embeddings", "Vector Search", "RAG"],
-    points: [
-      "Semantic matching system using embeddings and vector search to score job-fit between a resume and a job description.",
-      "Same retrieval approach that powers the live agent on this page when a visitor pastes a JD mid-conversation.",
-    ],
-    metric: "Semantic scoring",
   },
   {
     id: "arecanut",
@@ -100,8 +91,32 @@ export const projects: Project[] = [
       "Time-series forecasting of wholesale arecanut prices across two grades, comparing classical and neural models against a naive persistence baseline.",
       "2,446 daily observations, 80/20 temporal split, 30-day sliding window evaluation.",
     ],
-    link: "https://github.com/MAdityaRao/arecanut_lstm",
+    link: "/project/project_readme/aracanut_lstm",
     metric: "5 models compared",
+  },
+  {
+    id: "nitk-library",
+    name: "NITK Library Agent",
+    role: "Research Agent",
+    stack: ["Python", "LLM", "Agent"],
+    points: ["Automated library inquiry system for NITK library."],
+    link: "/project/project_readme/nitk_library_agent",
+  },
+  {
+    id: "outbound-agent",
+    name: "Outbound Calling Agent",
+    role: "Voice Agent",
+    stack: ["LiveKit", "Python"],
+    points: ["Automated outbound calling system."],
+    link: "/project/project_readme/outbound_agent",
+  },
+  {
+    id: "frontend-agent",
+    name: "Frontend Code Agent",
+    role: "Dev Tools",
+    stack: ["TypeScript", "LLM"],
+    points: ["Automated frontend code generator/helper."],
+    link: "/project/project_readme/agent_frondend",
   },
 ];
 

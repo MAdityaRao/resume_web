@@ -14,6 +14,7 @@ export default function Skills() {
               key={group.group}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
               className="glass p-6 rounded-2xl border border-white/5 hover:border-purple/50 transition-colors"
             >
