@@ -21,7 +21,7 @@ export default function About() {
               src="/aditya.jpg"
               alt="Aditya"
               fill
-              className="object-cover"
+              className="object-cover object-top"
               priority
             />
             <div className="absolute bottom-6 left-6 right-6 p-4 glass rounded-xl border border-white/10 text-white text-sm font-medium">

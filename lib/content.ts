@@ -111,8 +111,8 @@ export const projects: Project[] = [
     link: "/project/project_readme/outbound_agent",
   },
   {
-    id: "frontend-agent",
-    name: "Frontend Code Agent",
+    id: "agent-frontend-integration",
+    name: "Agent–Frontend Integration",
     role: "Dev Tools",
     stack: ["TypeScript", "LLM"],
     points: ["Automated frontend code generator/helper."],
