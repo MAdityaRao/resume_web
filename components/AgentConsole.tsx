@@ -92,7 +92,7 @@ if (levels.length) {
             }`}
           />
 
-          <div className="relative glass-strong rounded-[2rem] overflow-hidden agent-card">
+          <div className="relative glass-strong rounded-[2rem] overflow-hidden agent-card w-full">
             {/* HUD corner brackets */}
             <Corner className="absolute top-3 left-3 text-cyan/50" />
             <Corner className="absolute top-3 right-3 text-cyan/50 rotate-90" />
@@ -280,20 +280,20 @@ if (levels.length) {
 
             {/* Command input */}
            <form onSubmit={handleSend} className="border-t border-white/5 bg-black/30 px-6 py-4">
-  <div className="flex items-center rounded-xl border border-white/10 bg-black/40 px-4 py-2">
-    <span className="mr-3 text-cyan">&gt;</span>
+  <div className="flex items-center rounded-xl border border-white/10 bg-black/40 px-4 py-2 gap-2">
+    <span className="text-cyan shrink-0">&gt;</span>
 
     <input
       value={draft}
       onChange={(e) => setDraft(e.target.value)}
-      className="flex-1 bg-transparent outline-none text-white"
+      className="flex-1 bg-transparent outline-none text-white min-w-0"
       placeholder="Type a message..."
     />
 
     <button
       type="submit"
       disabled={!live || !draft.trim()}
-      className="ml-3 flex h-10 w-10 items-center justify-center rounded-full bg-cyan text-black hover:scale-105 transition disabled:opacity-40"
+      className="flex h-10 w-10 items-center justify-center rounded-full bg-cyan text-black hover:scale-105 transition disabled:opacity-40 shrink-0"
     >
       <Send size={18} />
     </button>
