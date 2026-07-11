@@ -1,8 +1,15 @@
 "use client";
-import { Send } from "lucide-react";
+import { Send, Mic, Square } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAgentSession } from "@/lib/useAgentSession";
+
+const SUGGESTED_QUESTIONS = [
+  "Do you have experience with LLM agents like LangChain or LangGraph?",
+  "Have you built real-time voice AI with LiveKit or WebRTC?",
+  "Any experience with Python, FastAPI, and AWS deployment?",
+  "Have you worked with PostgreSQL and backend data pipelines?",
+];
 
 function useElapsed(live: boolean) {
   const [seconds, setSeconds] = useState(0);
@@ -19,10 +26,43 @@ function useElapsed(live: boolean) {
   return `${m}:${s}`;
 }
 
-function Corner({ className }: { className: string }) {
+/**
+ * Radial bar visualizer that wraps tightly around the mic button.
+ * Bars sit just outside the button edge and extend outward with audio level.
+ * viewBox is a fixed 0-200 square so it scales cleanly at any container size (mobile-safe).
+ */
+function RadialBars({ bars, live, reconnecting }: { bars: number[]; live: boolean; reconnecting: boolean }) {
+  const center = 100;
+  const innerRadius = 34;
+  const maxBarLength = 54;
+  const barCount = bars.length;
+  const active = live || reconnecting;
+
   return (
-    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" className={className}>
-      <path d="M1 12V4C1 2.34315 2.34315 1 4 1H12" stroke="currentColor" strokeWidth="1.5" />
+    <svg viewBox="0 0 200 200" className="absolute inset-0 w-full h-full overflow-visible" aria-hidden="true">
+      {bars.map((level, i) => {
+        const angle = (i / barCount) * Math.PI * 2 - Math.PI / 2;
+        const clamped = Math.max(0.05, Math.min(1, level));
+        const length = active ? 14 + clamped * maxBarLength : 8;
+        const x1 = center + innerRadius * Math.cos(angle);
+        const y1 = center + innerRadius * Math.sin(angle);
+        const x2 = center + (innerRadius + length) * Math.cos(angle);
+        const y2 = center + (innerRadius + length) * Math.sin(angle);
+        return (
+          <motion.line
+            key={i}
+            x1={x1}
+            y1={y1}
+            animate={{ x2, y2 }}
+            transition={{ duration: 0.12, ease: "easeOut" }}
+            stroke="currentColor"
+            strokeWidth={4}
+            strokeLinecap="round"
+            className={active ? "text-cyan" : "text-faint"}
+            style={{ opacity: active ? 0.6 + clamped * 0.4 : 0.4 }}
+          />
+        );
+      })}
     </svg>
   );
 }
@@ -55,12 +95,11 @@ export default function AgentConsole() {
     const tick = () => {
       const levels = getLevels();
 
-if (levels.length) {
-    setBars(levels);
-} else {
-    setBars(prev => prev.map(() => 0.15 + Math.random() * 0.5));
-}
-
+      if (levels.length) {
+        setBars(levels);
+      } else {
+        setBars((prev) => prev.map(() => 0.15 + Math.random() * 0.5));
+      }
 
       raf = requestAnimationFrame(tick);
     };
@@ -73,6 +112,11 @@ if (levels.length) {
     if (!draft.trim()) return;
     const ok = await sendChatMessage(draft.trim());
     if (ok) setDraft("");
+  }
+
+  async function handleSuggestion(text: string) {
+    if (!live) return;
+    await sendChatMessage(text);
   }
 
   return (
@@ -88,41 +132,25 @@ if (levels.length) {
           {/* Outer glow */}
           <div
             className={`absolute -inset-1 rounded-[2rem] -z-10 blur-2xl transition-opacity duration-700 ${
-              live ? "opacity-70 bg-gradient-to-br from-cyan/50 via-purple/30 to-cyan/50" : "opacity-25 bg-gradient-to-br from-purple/30 to-cyan/20"
+              live
+                ? "opacity-70 bg-gradient-to-br from-cyan/30 via-transparent to-violet/30"
+                : "opacity-25 bg-gradient-to-br from-faint/20 to-cyan/10"
             }`}
           />
 
-          <div className="relative glass-strong rounded-[2rem] overflow-hidden agent-card w-full">
-            {/* HUD corner brackets */}
-            <Corner className="absolute top-3 left-3 text-cyan/50" />
-            <Corner className="absolute top-3 right-3 text-cyan/50 rotate-90" />
-            <Corner className="absolute bottom-3 left-3 text-cyan/50 -rotate-90" />
-            <Corner className="absolute bottom-3 right-3 text-cyan/50 rotate-180" />
-
-            {/* Scanline sweep */}
-            {live && (
-              <motion.div
-                className="absolute left-0 right-0 h-24 bg-gradient-to-b from-transparent via-cyan/[0.06] to-transparent pointer-events-none z-10"
-                animate={{ top: ["-10%", "110%"] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-              />
-            )}
-
-            {/* Faint HUD grid */}
-            <div className="absolute inset-0 hero-grid-bg opacity-20 pointer-events-none" />
-
+          <div className="relative glass-strong rounded-[2rem] overflow-hidden agent-card w-full border border-border">
             {/* Header readout */}
-            <div className="relative px-6 pt-6 pb-4 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.2em] text-slate-500">
-              <span>SIG_VOICE_AGENT</span>
+            <div className="relative px-4 sm:px-6 pt-6 pb-4 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.2em] text-muted">
+              <span>Voice Interface</span>
               <span
                 className={
                   live
                     ? "text-cyan"
                     : reconnecting
-                    ? "text-amber animate-pulse"
+                    ? "text-cyan animate-pulse"
                     : status === "error"
-                    ? "text-red-400"
-                    : "text-slate-600"
+                    ? "text-coral"
+                    : "text-faint"
                 }
               >
                 {live && `SESSION ${elapsed}`}
@@ -133,172 +161,140 @@ if (levels.length) {
               </span>
             </div>
 
-            {errorMessage && (status === "error") && (
-              <div className="mx-6 mb-2 -mt-2 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-300 text-xs font-mono">
+            {errorMessage && status === "error" && (
+              <div className="mx-6 mb-2 -mt-2 px-3 py-2 rounded-lg bg-coral/10 border border-coral/20 text-coral text-xs font-mono">
                 {errorMessage}
               </div>
             )}
 
-            {/* Orb + radial spectrum */}
-            <div className="relative flex flex-col items-center pt-4 pb-8">
-              <div className="relative w-44 h-44 flex items-center justify-center">
-                {/* Radar pings */}
-                {active &&
-                  [0, 1, 2].map((i) => (
-                    <motion.span
-                      key={i}
-                      className={`absolute inset-0 rounded-full border ${
-                        reconnecting ? "border-amber/40" : "border-cyan/40"
-                      }`}
-                      initial={{ scale: 0.4, opacity: 0.6 }}
-                      animate={{ scale: 1.6, opacity: 0 }}
-                      transition={{ duration: 2.4, repeat: Infinity, delay: i * 0.8, ease: "easeOut" }}
-                    />
-                  ))}
-
-                {/* Rotating dashed ring */}
-                <motion.svg
-                  viewBox="0 0 200 200"
-                  className="absolute inset-0 w-full h-full"
-                  animate={{ rotate: active ? 360 : 0 }}
-                  transition={{ duration: reconnecting ? 4 : 20, repeat: active ? Infinity : 0, ease: "linear" }}
-                >
-                  <circle
-                    cx="100"
-                    cy="100"
-                    r="92"
-                    fill="none"
-                    stroke={
-                      reconnecting
-                        ? "rgba(255,182,72,0.5)"
-                        : live
-                        ? "rgba(43,200,236,0.4)"
-                        : "rgba(148,163,184,0.15)"
-                    }
-                    strokeWidth="1.5"
-                    strokeDasharray="4 10"
+            {/* Orb area */}
+            <div className="relative flex flex-col items-center pt-5 pb-6 sm:pt-6 sm:pb-8 px-4">
+              <div className="relative w-44 h-44 sm:w-52 sm:h-52 flex items-center justify-center shrink-0">
+                {/* Soft pulse ring behind bars when live */}
+                {live && (
+                  <motion.div
+                    className="absolute inset-0 rounded-full bg-cyan/5"
+                    animate={{ scale: [1, 1.08, 1], opacity: [0.5, 0.15, 0.5] }}
+                    transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
                   />
-                </motion.svg>
+                )}
 
-                {/* Radial bar spectrum */}
-                <svg viewBox="0 0 200 200" className="absolute inset-0 w-full h-full">
-                  {bars.map((v, i) => {
-                    const angle = (i / bars.length) * 360;
-                    const rad = (angle * Math.PI) / 180;
-                    const rInner = 62;
-                    const len = 10 + v * 20;
-                    const x1 = 100 + rInner * Math.cos(rad);
-                    const y1 = 100 + rInner * Math.sin(rad);
-                    const x2 = 100 + (rInner + len) * Math.cos(rad);
-                    const y2 = 100 + (rInner + len) * Math.sin(rad);
-                    return (
-                      <line
-                        key={i}
-                        x1={x1}
-                        y1={y1}
-                        x2={x2}
-                        y2={y2}
-                        stroke={live ? "#2BC8EC" : "#334155"}
-                        strokeWidth="2.5"
-                        strokeLinecap="round"
-                        opacity={live ? 0.85 : 0.4}
-                      />
-                    );
-                  })}
-                </svg>
+                {/* Radial waveform hugging the button */}
+                <RadialBars bars={bars} live={live} reconnecting={reconnecting} />
 
-                {/* Core connect button */}
+                {/* Core connect/disconnect button — icon + label live inside the circle */}
                 <motion.button
-                  whileHover={{ scale: 1.06 }}
-                  whileTap={{ scale: 0.94 }}
-                  onClick={live ? disconnect : connect}
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={live || reconnecting ? disconnect : connect}
                   disabled={connecting}
-                  className={`relative z-10 w-20 h-20 rounded-full flex items-center justify-center font-mono text-[10px] uppercase tracking-widest transition-colors disabled:opacity-60 ${
+                  aria-label={live ? "Stop voice session" : "Start voice session"}
+                  className={`relative z-10 w-24 h-24 sm:w-28 sm:h-28 rounded-full flex flex-col items-center justify-center gap-1 border transition-all disabled:opacity-60 disabled:cursor-not-allowed ${
                     live
-                      ? "bg-cyan/10 border border-cyan/50 text-cyan shadow-glow-cyan"
+                      ? "bg-cyan/10 border-cyan/30 text-cyan shadow-glow-cyan hover:border-coral/40 hover:text-coral"
                       : reconnecting
-                      ? "bg-amber/10 border border-amber/50 text-amber"
-                      : "bg-white text-black"
+                      ? "bg-cyan/10 border-cyan/30 text-cyan"
+                      : "bg-ink text-bg hover:bg-ink/90 border-ink"
                   }`}
                 >
-                  {live && (
-                    <span className="flex flex-col items-center leading-tight">
-                      <span className="w-2.5 h-2.5 rounded-sm bg-cyan mb-1 live-dot" />
-                      End
-                    </span>
-                  )}
-                  {reconnecting && "…"}
-                  {connecting && "…"}
-                  {!active && !connecting && "Talk"}
+                  {live ? <Square size={20} /> : <Mic size={24} className="sm:hidden" />}
+                  {!live && <Mic size={26} className="hidden sm:block" />}
+                  <span className="font-mono text-[10px] uppercase tracking-widest">
+                    {connecting ? "…" : live ? "Stop" : reconnecting ? "…" : "Start"}
+                  </span>
                 </motion.button>
               </div>
 
-              <p className="mt-4 font-mono text-[11px] text-slate-500 uppercase tracking-widest">
-                {live && "Listening — speak naturally"}
-                {reconnecting && "Network hiccup — reconnecting automatically"}
-                {connecting && "Connecting — this can take a few seconds on campus wifi"}
-                {status === "error" && "Tap to try again"}
-                {(status === "idle" || status === "ended") && "Tap to start a live voice session"}
+              <p className="mt-5 font-mono text-[11px] text-muted uppercase tracking-widest text-center px-4">
+                {live && "Active — listening"}
+                {reconnecting && "Reconnecting"}
+                {connecting && "Connecting"}
+                {status === "error" && "Try again"}
+                {(status === "idle" || status === "ended") && "Tap start to begin"}
               </p>
             </div>
 
-            {/* Transcript — terminal log style */}
-            <div
-              ref={scrollRef}
-              className="relative h-64 overflow-y-auto px-6 py-4 space-y-3 scrollbar-thin border-t border-white/5 bg-black/20 font-mono text-sm"
-            >
-              {transcript.length === 0 ? (
-                <div className="h-full flex items-center justify-center text-slate-600 text-xs italic">
-                  &gt; awaiting transmission...
-                </div>
-              ) : (
-                <AnimatePresence>
-                  {transcript.map((line) => (
-                    <motion.div
-                      key={line.id}
-                      initial={{ opacity: 0, x: -8 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.25 }}
-                      className="flex gap-2"
-                    >
-                      <span className={line.from === "you" ? "text-purple" : "text-cyan"}>
-                        {line.from === "you" ? "you>" : "ai>"}
-                      </span>
-                      <span className="text-slate-300">{line.text}</span>
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
-              )}
-              {live && (
-                <motion.span
-                  animate={{ opacity: [1, 0, 1] }}
-                  transition={{ duration: 1, repeat: Infinity }}
-                  className="inline-block w-2 h-4 bg-cyan align-middle"
-                />
-              )}
+            {/* Transcript + suggestions — fixed 80/20 split so quick-asks never disappear */}
+            <div className="relative flex flex-col h-64 sm:h-72 border-t border-border bg-elevated/40">
+              {/* Chat area — ~80% */}
+              <div
+                ref={scrollRef}
+                className="flex-[4] min-h-0 overflow-y-auto px-4 sm:px-6 py-4 space-y-3 font-mono text-[13px] sm:text-sm"
+              >
+                {!live ? (
+                  <div className="h-full flex items-center justify-center text-faint text-xs italic text-center px-4">
+                    &gt; connect to agent to unlock chat...
+                  </div>
+                ) : transcript.length === 0 ? (
+                  <div className="h-full flex items-center justify-center text-faint text-xs italic">
+                    &gt; awaiting transmission...
+                  </div>
+                ) : (
+                  <AnimatePresence>
+                    {transcript.map((line) => (
+                      <motion.div
+                        key={line.id}
+                        initial={{ opacity: 0, y: 5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="flex gap-2"
+                      >
+                        <span className={line.from === "you" ? "text-muted" : "text-cyan"}>
+                          {line.from === "you" ? "you>" : "ai>"}
+                        </span>
+                        <span className="text-ink break-words">{line.text}</span>
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                )}
+              </div>
+
+              {/* Suggested questions — ~20%, persistent, swipeable on mobile, never disappears */}
+              <div
+                className="flex-1 min-h-0 border-t border-border/70 flex items-center gap-2 overflow-x-auto snap-x snap-mandatory scroll-px-4 px-4 py-2"
+                style={{
+                  maskImage: "linear-gradient(to right, transparent, black 16px, black calc(100% - 16px), transparent)",
+                  WebkitMaskImage:
+                    "linear-gradient(to right, transparent, black 16px, black calc(100% - 16px), transparent)",
+                }}
+              >
+                <span className="shrink-0 text-[9px] font-mono uppercase tracking-widest text-faint pr-1">
+                  Try
+                </span>
+                {SUGGESTED_QUESTIONS.map((q) => (
+                  <button
+                    key={q}
+                    type="button"
+                    disabled={!live}
+                    onClick={() => handleSuggestion(q)}
+                    className="shrink-0 snap-start whitespace-nowrap text-[11px] font-mono px-3 py-2 sm:py-1.5 rounded-full border border-border bg-panel/60 text-muted hover:border-cyan/40 hover:text-cyan active:scale-95 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                  >
+                    {q}
+                  </button>
+                ))}
+                <span className="shrink-0 w-1" aria-hidden="true" />
+              </div>
             </div>
 
             {/* Command input */}
-           <form onSubmit={handleSend} className="border-t border-white/5 bg-black/30 px-6 py-4">
-  <div className="flex items-center rounded-xl border border-white/10 bg-black/40 px-4 py-2 gap-2">
-    <span className="text-cyan shrink-0">&gt;</span>
-
-    <input
-      value={draft}
-      onChange={(e) => setDraft(e.target.value)}
-      className="flex-1 bg-transparent outline-none text-white min-w-0"
-      placeholder="Type a message..."
-    />
-
-    <button
-      type="submit"
-      disabled={!live || !draft.trim()}
-      className="flex h-10 w-10 items-center justify-center rounded-full bg-cyan text-black hover:scale-105 transition disabled:opacity-40 shrink-0"
-    >
-      <Send size={18} />
-    </button>
-  </div>
-</form>
+            <form onSubmit={handleSend} className="border-t border-border bg-elevated/40 px-4 sm:px-6 py-3 sm:py-4">
+              <div className="flex items-center rounded-xl border border-border bg-panel/60 px-4 py-2 gap-2">
+                <span className={`shrink-0 ${live ? "text-cyan" : "text-faint"}`}>&gt;</span>
+                <input
+                  value={draft}
+                  disabled={!live}
+                  onChange={(e) => setDraft(e.target.value)}
+                  className="flex-1 bg-transparent outline-none text-ink min-w-0 placeholder-faint text-base"
+                  placeholder={live ? "Ask something..." : "Connect to chat..."}
+                />
+                <button
+                  type="submit"
+                  disabled={!live || !draft.trim()}
+                  className="flex h-9 w-9 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-cyan text-bg hover:scale-105 active:scale-95 transition disabled:opacity-40 shrink-0"
+                >
+                  <Send size={14} />
+                </button>
+              </div>
+            </form>
           </div>
         </motion.div>
       </div>

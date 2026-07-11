@@ -29,7 +29,7 @@ export default function About() {
           >
             <Image src="/aditya.jpg" alt="Aditya" fill className="object-cover object-top" priority />
             <div className="absolute inset-0 z-10 pointer-events-none">
-              <LiveDataAnimation />
+              
             </div>
             <div className="absolute bottom-6 left-6 right-6 p-4 glass rounded-xl text-white text-sm font-medium z-20">
               {profile.location}

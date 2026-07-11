@@ -62,7 +62,21 @@ export function useAgentSession() {
 
   const pushLine = useCallback((from: "you" | "agent", text: string) => {
     if (!text || !text.trim()) return;
-    setTranscript((prev) => [...prev, { id: uid(), from, text: text.trim(), ts: Date.now() }]);
+    const trimmed = text.trim();
+    setTranscript((prev) => {
+      // On flaky wifi, LiveKit sometimes does a "full reconnect" (participant
+      // effectively rejoins) rather than a quick resume. If the backend agent's
+      // greeting is tied to a join event rather than "first join for this room",
+      // that can re-fire the opening line mid-conversation, silently swallowing
+      // whatever the visitor said in between. Guard against showing it twice:
+      // if this new agent line exactly matches the transcript's first agent
+      // line, and the conversation has already moved past that point, drop it.
+      const greeting = prev.find((l) => l.from === "agent");
+      if (from === "agent" && greeting && greeting.text === trimmed && prev.length > 1) {
+        return prev;
+      }
+      return [...prev, { id: uid(), from, text: trimmed, ts: Date.now() }];
+    });
   }, []);
 
   const cleanupMedia = useCallback(() => {

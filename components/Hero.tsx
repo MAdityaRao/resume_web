@@ -96,8 +96,7 @@ export default function Hero() {
           variants={item}
           initial="hidden"
           animate="show"
-          whileHover={{ y: -6 }}
-          className="w-full max-w-sm glass-strong rounded-3xl p-8 hover:shadow-glow transition-shadow duration-500 flex flex-col items-center hero-photo relative"
+          className="w-full max-w-sm glass-strong rounded-3xl p-8 transition-shadow duration-500 flex flex-col items-center hero-photo relative"
         >
           <div className="absolute -inset-px rounded-3xl bg-gradient-to-br from-amber/40 via-transparent to-amber/40 opacity-40 -z-10 blur-xl animate-border-glow" />
           <div className="mb-6 w-full">
