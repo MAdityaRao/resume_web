@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@livekit/protocol": "1.29.2",
+    "@neondatabase/serverless": "^1.1.0",
     "@tailwindcss/typography": "^0.5.20",
     "clsx": "2.1.1",
     "emailjs-com": "^3.2.0",

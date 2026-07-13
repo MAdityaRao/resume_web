@@ -8,6 +8,7 @@ const links = [
   { href: "#agent", label: "Agent" },
   { href: "#skills", label: "Skills" },
   { href: "#contact", label: "Contact" },
+  { href: "/admin", label: "Admin" },
 ];
 
 const NAV_OFFSET = 64;
@@ -25,12 +26,10 @@ export default function Nav() {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault();
-    if (isOpen) {
+    if (href.startsWith("#")) {
+      e.preventDefault();
       setIsOpen(false);
-      setTimeout(() => scrollToId(href), 300);
-    } else {
-      scrollToId(href);
+      setTimeout(() => scrollToId(href), isOpen ? 300 : 0);
     }
   };
 
