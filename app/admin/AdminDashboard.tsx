@@ -65,7 +65,7 @@ export default function AdminDashboard({ logs }: { logs: any[] }) {
             <span className="w-2 h-2 rounded-full bg-amber shadow-[0_0_10px_rgba(251,191,36,0.6)]" />
             Agent Logs
           </h1>
-          <p className="text-xs text-slate-500 mt-1">{currentLogs.length} total sessions</p>
+          <p className="text-xs text-slate-500 mt-4">{currentLogs.length} total sessions</p>
         </div>
         <div className="flex-1 overflow-y-auto p-3 space-y-2">
           {currentLogs.map((log) => (
