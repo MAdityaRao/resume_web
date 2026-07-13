@@ -56,12 +56,22 @@ export default function Hero() {
               Download CV
             </motion.a>
             <motion.a
-              whileHover={{ scale: 1.04, y: -2 }}
-              whileTap={{ scale: 0.97 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              animate={{
+                boxShadow: ["0 0 0px rgba(251,191,36,0.4)", "0 0 20px rgba(251,191,36,0.6)", "0 0 0px rgba(251,191,36,0.4)"]
+              }}
+              transition={{
+                boxShadow: { repeat: Infinity, duration: 2, ease: "easeInOut" },
+                scale: { duration: 0.2 }
+              }}
               href="#agent"
-              className="px-6 py-3 rounded-full glass-pill text-white text-sm md:text-base"
+              className="relative px-8 py-3 rounded-full bg-amber text-black font-black uppercase tracking-widest text-sm border-2 border-amber"
             >
-              Talk to Agent
+              <span className="flex items-center gap-2">
+                Talk to My Agent
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+              </span>
             </motion.a>
             <motion.a
               whileHover={{ scale: 1.04, y: -2 }}
