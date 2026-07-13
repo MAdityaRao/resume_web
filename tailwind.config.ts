@@ -8,16 +8,16 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        bg: "#0A0D14",
-        elevated: "#10141D",
-        panel: "#141924",
-        border: "#232A38",
+        bg: "#262626", // Charcoal
+        elevated: "#333333",
+        panel: "#404040",
+        border: "#505050",
         ink: "#F2F5F8",
-        muted: "#8D98A8",
-        faint: "#5B6577",
-        violet: {
-          DEFAULT: "#7C6CFF",
-          light: "#9D8EFF",
+        muted: "#A0A0A0",
+        faint: "#707070",
+        terracotta: {
+          DEFAULT: "#C05C43",
+          light: "#D87A60",
         },
         cyan: {
           DEFAULT: "#2BC8EC",
