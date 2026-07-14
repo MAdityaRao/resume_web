@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import BackButton from "@/components/BackButton";
 
 export default function AdminDashboard({ logs }: { logs: any[] }) {
   const [currentLogs, setCurrentLogs] = useState(logs);
@@ -61,8 +62,11 @@ export default function AdminDashboard({ logs }: { logs: any[] }) {
       {/* Sidebar - Log List */}
       <aside className={`w-full md:w-96 border-r border-white/10 flex flex-col h-full bg-[#0A0D14] ${mobileView === 'detail' ? 'hidden md:flex' : 'flex'}`}>
         <div className="p-6 border-b border-white/10 shrink-0">
+          <div className="mb-6">
+            <BackButton />
+          </div>
           <h1 className="text-xl font-bold flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-amber shadow-[0_0_10px_rgba(251,191,36,0.6)]" />
+            <span className="w-2 h-2 rounded-full bg-terracotta shadow-[0_0_10px_rgba(192,92,67,0.6)]" />
             Agent Logs
           </h1>
           <p className="text-xs text-slate-500 mt-4">{currentLogs.length} total sessions</p>
@@ -77,12 +81,12 @@ export default function AdminDashboard({ logs }: { logs: any[] }) {
               }}
               className={`w-full text-left p-4 rounded-xl border transition-all duration-200 ${
                 selectedLog?.id === log.id
-                  ? "bg-white/5 border-amber/30"
+                  ? "bg-white/5 border-terracotta/30"
                   : "bg-transparent border-transparent hover:bg-white/5"
               }`}
             >
               <div className="flex justify-between items-center mb-1">
-                <p className={`font-semibold text-sm truncate ${selectedLog?.id === log.id ? 'text-amber' : 'text-white'}`}>
+                <p className={`font-semibold text-sm truncate ${selectedLog?.id === log.id ? 'text-terracotta' : 'text-white'}`}>
                   {log.visitor_name || "Anonymous"}
                 </p>
                 <span className="text-[10px] text-slate-500">
@@ -134,7 +138,7 @@ export default function AdminDashboard({ logs }: { logs: any[] }) {
                       </span>
                       <div className={`max-w-[95%] md:max-w-[80%] px-4 py-3 md:px-6 md:py-4 rounded-2xl md:rounded-3xl text-xs md:text-sm leading-relaxed shadow-lg ${
                         msg.from === 'you'
-                          ? 'bg-amber text-black rounded-br-none'
+                          ? 'bg-terracotta/10 text-white rounded-br-none border border-terracotta/30'
                           : 'bg-[#1a202e] text-slate-100 rounded-bl-none border border-white/5'
                       }`}>
                         {msg.text}

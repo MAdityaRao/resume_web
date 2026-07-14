@@ -35,12 +35,12 @@ export default async function ProjectPage({ params }: { params: { slug: string[]
             prose-p:text-[#F0EDE8]/90
             prose-li:text-[#F0EDE8]/90
             prose-strong:text-white
-            prose-code:text-[#FFB648]
-            prose-a:text-[#FFB648]
+            prose-code:text-[#C05C43]
+            prose-a:text-[#C05C43]
             prose-a:no-underline
             hover:prose-a:underline
             prose-blockquote:text-white
-            prose-blockquote:border-l-[#FFB648]
+            prose-blockquote:border-l-[#C05C43]
             prose-img:rounded-xl
           "
         >

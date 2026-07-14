@@ -30,7 +30,7 @@ export default function Hero() {
           >
             Aditya
             <br />
-            <span className="text-amber">
+            <span className="text-terracotta">
               Ai Agent Developer
             </span>
           </motion.h1>
@@ -56,17 +56,17 @@ export default function Hero() {
               Download CV
             </motion.a>
             <motion.a
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.04, y: -2 }}
+              whileTap={{ scale: 0.97 }}
               animate={{
-                boxShadow: ["0 0 0px rgba(251,191,36,0.4)", "0 0 20px rgba(251,191,36,0.6)", "0 0 0px rgba(251,191,36,0.4)"]
+                boxShadow: ["0 0 0px rgba(192,92,67,0.4)", "0 0 20px rgba(192,92,67,0.6)", "0 0 0px rgba(192,92,67,0.4)"]
               }}
               transition={{
                 boxShadow: { repeat: Infinity, duration: 2, ease: "easeInOut" },
                 scale: { duration: 0.2 }
               }}
               href="#agent"
-              className="relative px-8 py-3 rounded-full bg-amber text-black font-black uppercase tracking-widest text-sm border-2 border-amber"
+              className="relative px-8 py-3 rounded-full bg-terracotta text-white font-black uppercase tracking-widest text-sm border-2 border-terracotta"
             >
               <span className="flex items-center gap-2">
                 Talk to My Agent
@@ -108,7 +108,7 @@ export default function Hero() {
           animate="show"
           className="w-full max-w-sm glass-strong rounded-3xl p-8 transition-shadow duration-500 flex flex-col items-center hero-photo relative"
         >
-          <div className="absolute -inset-px rounded-3xl bg-gradient-to-br from-amber/40 via-transparent to-amber/40 opacity-40 -z-10 blur-xl animate-border-glow" />
+          <div className="absolute -inset-px rounded-3xl bg-gradient-to-br from-terracotta/40 via-transparent to-terracotta/40 opacity-40 -z-10 blur-xl animate-border-glow" />
           <div className="mb-6 w-full">
             <h3 className="text-white font-medium text-lg mb-2">Hotel Voice Automation</h3>
             <p className="text-slate-400 text-sm leading-relaxed">
@@ -124,7 +124,7 @@ export default function Hero() {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             href="/project/project_readme/hotel_agent"
-            className="w-full py-3 rounded-xl bg-amber/10 border border-amber/20 text-amber text-center font-medium hover:bg-amber/20 transition-all text-sm"
+            className="w-full py-3 rounded-xl bg-terracotta/10 border border-terracotta/20 text-terracotta text-center font-medium hover:bg-terracotta/20 transition-all text-sm"
           >
             View Case Study
           </motion.a>

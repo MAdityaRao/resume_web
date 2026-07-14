@@ -18,6 +18,7 @@ const config: Config = {
         terracotta: {
           DEFAULT: "#C05C43",
           light: "#D87A60",
+          dim: "#6E3D30",
         },
         cyan: {
           DEFAULT: "#2BC8EC",
@@ -32,10 +33,6 @@ const config: Config = {
           dark: "rgba(0, 0, 0, 0.2)",
         },
         mint: "#33D6A0",
-        amber: {
-          DEFAULT: "#FFB648",
-          dim: "#6E5326",
-        },
         coral: "#FF6B5E",
       },
       fontFamily: {
@@ -51,7 +48,7 @@ const config: Config = {
         signal: "cubic-bezier(0.16, 1, 0.3, 1)",
       },
       boxShadow: {
-        "glow": "0 0 40px -8px rgba(255, 182, 72, 0.4)",
+        "glow": "0 0 40px -8px rgba(192, 92, 67, 0.4)",
         "glow-cyan": "0 0 40px -8px rgba(43, 200, 236, 0.35)",
         "glow-purple": "0 0 40px -8px rgba(168, 85, 247, 0.35)",
         "glass-inset": "inset 0 1px 0 0 rgba(255,255,255,0.06)",

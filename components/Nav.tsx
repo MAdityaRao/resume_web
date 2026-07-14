@@ -52,7 +52,7 @@ export default function Nav() {
             alt="Aditya"
             className="w-8 h-8 rounded-full object-cover object-top border border-white/20"
           />
-          Aditya<span className="text-amber">.</span>
+          Aditya<span className="text-terracotta">.</span>
         </a>
 
         {/* Desktop Nav */}
@@ -65,7 +65,7 @@ export default function Nav() {
               className="relative group hover:text-white transition-colors py-1"
             >
               {l.label}
-              <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-amber rounded-full scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 shadow-glow" />
+              <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-terracotta rounded-full scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 shadow-glow" />
             </a>
           ))}
           <motion.a
@@ -118,7 +118,7 @@ export default function Nav() {
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.06 }}
-                  className="glass-pill rounded-xl px-4 py-3.5 hover:text-white hover:border-amber/40 transition-colors"
+                  className="glass-pill rounded-xl px-4 py-3.5 hover:text-white hover:border-terracotta/40 transition-colors"
                   onClick={(e) => handleScroll(e, l.href)}
                 >
                   {l.label}

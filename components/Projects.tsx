@@ -34,11 +34,11 @@ export default function Projects() {
               >
                 <div className="relative z-10">
                   <div className="flex justify-between items-start mb-6">
-                    <h3 className="text-2xl font-bold text-white group-hover:text-amber transition-colors">
+                    <h3 className="text-2xl font-bold text-white group-hover:text-terracotta transition-colors">
                       {p.name}
                     </h3>
                     {p.metric && (
-                      <span className="text-xs font-mono text-amber bg-amber/10 px-3 py-1 rounded-full border border-amber/20">
+                      <span className="text-xs font-mono text-terracotta bg-terracotta/10 px-3 py-1 rounded-full border border-terracotta/20">
                         {p.metric}
                       </span>
                     )}
@@ -55,13 +55,13 @@ export default function Projects() {
                     <a
                       href={p.link}
                       target="_blank"
-                      className="inline-flex items-center text-sm font-semibold text-white hover:text-amber transition-colors"
+                      className="inline-flex items-center text-sm font-semibold text-white hover:text-terracotta transition-colors"
                     >
                       Read README <span className="ml-2 group-hover:translate-x-1 transition-transform inline-block">→</span>
                     </a>
                   )}
                 </div>
-                <div className="absolute inset-0 bg-gradient-to-br from-amber/5 to-amber/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute inset-0 bg-gradient-to-br from-terracotta/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               </motion.article>
             ))}
           </AnimatePresence>
@@ -73,7 +73,7 @@ export default function Projects() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.96 }}
               onClick={() => setShowAll(!showAll)}
-              className="px-8 py-3 rounded-full bg-amber/10 border border-amber/20 text-amber font-semibold hover:bg-amber/20 hover:shadow-glow transition-all cursor-pointer z-20 relative"
+              className="px-8 py-3 rounded-full bg-terracotta/10 border border-terracotta/20 text-terracotta font-semibold hover:bg-terracotta/20 hover:shadow-glow transition-all cursor-pointer z-20 relative"
             >
               {showAll ? "Show Less" : "View All Projects"}
             </motion.button>

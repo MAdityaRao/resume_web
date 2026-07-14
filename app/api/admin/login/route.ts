@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 export async function POST(req: Request) {
   const { password } = await req.json();
   if (password === process.env.ADMIN_PASSWORD) {
-    (await cookies()).set("admin_auth", "true", { httpOnly: true, secure: process.env.NODE_ENV === "production" });
+    (await cookies()).set("admin_auth", "true", { httpOnly: true, secure: process.env.NODE_ENV === "production", maxAge: undefined });
     return NextResponse.json({ success: true });
   }
   return NextResponse.json({ success: false }, { status: 401 });

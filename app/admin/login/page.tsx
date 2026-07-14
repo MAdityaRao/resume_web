@@ -2,58 +2,77 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import BackButton from "@/components/BackButton";
 
 export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     setError("");
-    const res = await fetch("/api/admin/login", {
-      method: "POST",
-      body: JSON.stringify({ password }),
-      headers: { "Content-Type": "application/json" },
-    });
+    try {
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        body: JSON.stringify({ password }),
+        headers: { "Content-Type": "application/json" },
+      });
 
-    if (res.ok) {
-      router.push("/admin");
-    } else {
-      setError("Wrong password");
+      if (res.ok) {
+        router.push("/admin");
+      } else {
+        setError("Wrong password");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <form onSubmit={handleLogin} className="flex flex-col gap-6 p-8 glass-strong rounded-2xl w-full max-w-sm">
-        <div className="space-y-1">
-          <h1 className="text-2xl font-bold text-white">Admin Login</h1>
-          <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Authorized Access Only</p>
-        </div>
+    <div className="flex flex-col min-h-dvh p-4">
+      <div className="w-full max-w-sm mx-auto mt-4">
+        <BackButton />
+      </div>
+      <div className="flex-grow flex items-center justify-center">
+        <form onSubmit={handleLogin} className="flex flex-col gap-6 p-4 sm:p-8 glass-strong rounded-2xl w-full max-w-sm">
+          <div className="space-y-1">
+            <h1 className="text-2xl font-bold text-white">Admin Login</h1>
+            <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Authorized Access Only</p>
+          </div>
 
-        {/* Warning Section */}
-        <div className="p-5 bg-red-950/40 border-2 border-red-700/50 rounded-xl">
-          <p className="text-sm font-black text-red-500 uppercase tracking-widest mb-2 flex items-center gap-2">
-            <span className="text-2xl">⚠️</span> Restricted Area
-          </p>
-          <p className="text-xs text-red-200 leading-relaxed font-medium">
-            This system is for the exclusive use of <strong>Aditya Rao</strong>. Unauthorized access attempts are actively monitored and logged. Proceed only if you are authorized.
-          </p>
-        </div>
+          {/* Warning Section */}
+          <div className="p-5 bg-red-950/40 border-2 border-red-700/50 rounded-xl">
+            <p className="text-sm font-black text-red-500 uppercase tracking-widest mb-2 flex items-center gap-2">
+              <span className="text-2xl">⚠️</span> Restricted Area
+            </p>
+            <p className="text-xs text-red-200 leading-relaxed font-medium">
+              This system is for the exclusive use of <strong>Aditya Rao</strong>. Unauthorized access attempts are actively monitored and logged. Proceed only if you are authorized.
+            </p>
+          </div>
 
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-          className="p-3 bg-white/10 rounded-lg text-white border border-white/5 focus:border-amber/50 outline-none transition-colors"
-        />
-        {error && <p className="text-red-500 text-xs text-center">{error}</p>}
-        <button type="submit" className="p-3 bg-amber text-black font-bold rounded-lg hover:bg-amber/90 transition-colors">
-          Verify Identity
-        </button>
-      </form>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleLogin(e as any);
+            }}
+            placeholder="Password"
+            className="p-3 bg-white/10 rounded-lg text-white border border-white/5 focus:border-terracotta/50 outline-none transition-colors"
+          />
+          {error && <p className="text-red-500 text-xs text-center">{error}</p>}
+          <button
+            type="submit"
+            disabled={loading}
+            className="p-3 bg-terracotta text-white font-bold rounded-lg hover:bg-terracotta/90 active:scale-[0.98] transition-all disabled:opacity-50"
+          >
+            {loading ? "Verifying..." : "Verify Identity"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

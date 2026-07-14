@@ -58,7 +58,7 @@ function RadialBars({ bars, live, reconnecting }: { bars: number[]; live: boolea
             stroke="currentColor"
             strokeWidth={4}
             strokeLinecap="round"
-            className={active ? "text-cyan" : "text-faint"}
+            className={active ? "text-terracotta" : "text-faint"}
             style={{ opacity: active ? 0.6 + clamped * 0.4 : 0.4 }}
           />
         );
@@ -133,8 +133,8 @@ export default function AgentConsole() {
           <div
             className={`absolute -inset-1 rounded-[2rem] -z-10 blur-2xl transition-opacity duration-700 ${
               live
-                ? "opacity-70 bg-gradient-to-br from-cyan/30 via-transparent to-violet/30"
-                : "opacity-25 bg-gradient-to-br from-faint/20 to-cyan/10"
+                ? "opacity-70 bg-gradient-to-br from-terracotta/30 via-transparent to-violet/30"
+                : "opacity-25 bg-gradient-to-br from-faint/20 to-terracotta/10"
             }`}
           />
 
@@ -145,9 +145,9 @@ export default function AgentConsole() {
               <span
                 className={
                   live
-                    ? "text-cyan"
+                    ? "text-terracotta"
                     : reconnecting
-                    ? "text-cyan animate-pulse"
+                    ? "text-terracotta animate-pulse"
                     : status === "error"
                     ? "text-coral"
                     : "text-faint"
@@ -173,7 +173,7 @@ export default function AgentConsole() {
                 {/* Soft pulse ring behind bars when live */}
                 {live && (
                   <motion.div
-                    className="absolute inset-0 rounded-full bg-cyan/5"
+                    className="absolute inset-0 rounded-full bg-terracotta/5"
                     animate={{ scale: [1, 1.08, 1], opacity: [0.5, 0.15, 0.5] }}
                     transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
                   />
@@ -191,9 +191,9 @@ export default function AgentConsole() {
                   aria-label={live ? "Stop voice session" : "Start voice session"}
                   className={`relative z-10 w-24 h-24 sm:w-28 sm:h-28 rounded-full flex flex-col items-center justify-center gap-1 border transition-all disabled:opacity-60 disabled:cursor-not-allowed ${
                     live
-                      ? "bg-cyan/10 border-cyan/30 text-cyan shadow-glow-cyan hover:border-coral/40 hover:text-coral"
+                      ? "bg-terracotta/10 border-terracotta/30 text-terracotta shadow-glow-terracotta hover:border-coral/40 hover:text-coral"
                       : reconnecting
-                      ? "bg-cyan/10 border-cyan/30 text-cyan"
+                      ? "bg-terracotta/10 border-terracotta/30 text-terracotta"
                       : "bg-ink text-bg hover:bg-ink/90 border-ink"
                   }`}
                 >
@@ -238,7 +238,7 @@ export default function AgentConsole() {
                         animate={{ opacity: 1, y: 0 }}
                         className="flex gap-2"
                       >
-                        <span className={line.from === "you" ? "text-muted" : "text-cyan"}>
+                        <span className={line.from === "you" ? "text-muted" : "text-terracotta"}>
                           {line.from === "you" ? "you>" : "ai>"}
                         </span>
                         <span className="text-ink break-words">{line.text}</span>
@@ -266,7 +266,7 @@ export default function AgentConsole() {
                     type="button"
                     disabled={!live}
                     onClick={() => handleSuggestion(q)}
-                    className="shrink-0 snap-start whitespace-nowrap text-[11px] font-mono px-3 py-2 sm:py-1.5 rounded-full border border-border bg-panel/60 text-muted hover:border-cyan/40 hover:text-cyan active:scale-95 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                    className="shrink-0 snap-start whitespace-nowrap text-[11px] font-mono px-3 py-2 sm:py-1.5 rounded-full border border-border bg-panel/60 text-muted hover:border-terracotta/40 hover:text-terracotta active:scale-95 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
                   >
                     {q}
                   </button>
@@ -278,7 +278,7 @@ export default function AgentConsole() {
             {/* Command input */}
             <form onSubmit={handleSend} className="border-t border-border bg-elevated/40 px-4 sm:px-6 py-3 sm:py-4">
               <div className="flex items-center rounded-xl border border-border bg-panel/60 px-4 py-2 gap-2">
-                <span className={`shrink-0 ${live ? "text-cyan" : "text-faint"}`}>&gt;</span>
+                <span className={`shrink-0 ${live ? "text-terracotta" : "text-faint"}`}>&gt;</span>
                 <input
                   value={draft}
                   disabled={!live}
@@ -289,7 +289,7 @@ export default function AgentConsole() {
                 <button
                   type="submit"
                   disabled={!live || !draft.trim()}
-                  className="flex h-9 w-9 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-cyan text-bg hover:scale-105 active:scale-95 transition disabled:opacity-40 shrink-0"
+                  className="flex h-9 w-9 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-terracotta text-white hover:scale-105 active:scale-95 transition disabled:opacity-40 shrink-0"
                 >
                   <Send size={14} />
                 </button>

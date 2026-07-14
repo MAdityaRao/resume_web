@@ -48,10 +48,10 @@ export default function About() {
                 whileHover={{ x: 4 }}
                 className="relative pl-8 border-l border-white/10 exp-header"
               >
-                <span className="absolute -left-1.5 top-2 w-3 h-3 rounded-full bg-amber shadow-glow" />
+                <span className="absolute -left-1.5 top-2 w-3 h-3 rounded-full bg-terracotta shadow-glow" />
                 <div className="flex justify-between items-start mb-2 exp-meta">
                   <h3 className="text-xl font-bold text-white">{job.role}</h3>
-                  <span className="text-sm font-mono text-amber">{job.period}</span>
+                  <span className="text-sm font-mono text-terracotta">{job.period}</span>
                 </div>
                 <p className="text-slate-400 mb-4">{job.org}</p>
                 <ul className="space-y-2">
@@ -69,10 +69,10 @@ export default function About() {
               viewport={{ once: true }}
               className="relative pl-8 border-l border-white/10 edu-inner"
             >
-              <span className="absolute -left-1.5 top-2 w-3 h-3 rounded-full bg-amber shadow-glow" />
+              <span className="absolute -left-1.5 top-2 w-3 h-3 rounded-full bg-terracotta shadow-glow" />
               <div className="flex justify-between items-start mb-2">
                 <h3 className="text-xl font-bold text-white">{education.degree}</h3>
-                <span className="text-sm font-mono text-amber edu-year">{education.period}</span>
+                <span className="text-sm font-mono text-terracotta edu-year">{education.period}</span>
               </div>
               <p className="text-slate-400">{education.school}</p>
             </motion.div>

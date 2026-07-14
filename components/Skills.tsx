@@ -27,7 +27,7 @@ export default function Skills() {
               className="glass glass-hover p-6 rounded-2xl"
             >
               <h3 className="text-white font-semibold mb-6 flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-amber animate-pulse" />
+                <span className="w-2 h-2 rounded-full bg-terracotta animate-pulse" />
                 {group.group}
               </h3>
               <div className="flex flex-wrap gap-2">
@@ -35,7 +35,7 @@ export default function Skills() {
                   <motion.span
                     key={item}
                     whileHover={{ scale: 1.08, y: -2 }}
-                    className="px-3 py-1 rounded-md bg-white/5 border border-white/5 text-sm text-slate-300 hover:text-white hover:border-amber/40 hover:bg-amber/5 transition-colors cursor-default"
+                    className="px-3 py-1 rounded-md bg-white/5 border border-white/5 text-sm text-slate-300 hover:text-white hover:border-terracotta/40 hover:bg-terracotta/5 transition-colors cursor-default"
                   >
                     {item}
                   </motion.span>
