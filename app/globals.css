@@ -1,195 +1,49 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  -webkit-font-smoothing: antialiased;
 }
 
 html {
-  /* scroll-behavior: smooth; */
-  scroll-padding-top: 4rem; /* h-16 = 4rem */
+  scroll-behavior: auto !important;
 }
 
 body {
-  background-color: #262626; /* Charcoal */
-  color: #FFFFFF; /* Brightened for better contrast */
-  font-family: 'Inter', sans-serif;
-  -webkit-font-smoothing: antialiased;
+  background-color: #FFFFFF;
+  color: #18181B;
+  font-family: var(--font-body);
   overflow-x: hidden;
-  position: relative;
+  will-change: transform;
 }
 
-/* Ambient background blobs, fixed behind all content */
-.ambient-bg {
-  position: fixed;
-  inset: 0;
-  z-index: -10;
-  overflow: hidden;
-  pointer-events: none;
-}
-.ambient-blob {
-  position: absolute;
-  border-radius: 9999px;
-  filter: blur(100px);
-  opacity: 0.35;
-}
+/* Custom Scrollbar for Light Mode */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #FFFFFF; }
+::-webkit-scrollbar-thumb { background: #E4E4E7; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #D4D4D8; }
 
-/* Scroll reveal */
-.reveal {
-  opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.65s cubic-bezier(0.22,1,0.36,1), transform 0.65s cubic-bezier(0.22,1,0.36,1);
-}
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
+.section-wrapper {
+  min-height: 100vh;
+  padding: 4rem 1rem; /* Reduced padding for mobile */
+  @media (min-width: 768px) {
+    padding: 8rem 2rem;
+  }
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
-/* --- Bold glass system --- */
-.glass {
-  background: rgba(40, 40, 40, 0.6);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow:
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.04),
-    0 8px 32px -12px rgba(0, 0, 0, 0.7);
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
 }
-
-.glass-strong {
-  background: rgba(30, 30, 30, 0.7);
-  backdrop-filter: blur(24px) saturate(140%);
-  -webkit-backdrop-filter: blur(24px) saturate(140%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow:
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.05),
-    0 8px 40px -10px rgba(0, 0, 0, 0.8);
-}
-
-.glass-hover {
-  transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease, background 0.35s ease;
-}
-.glass-hover:hover {
-  border-color: rgba(192, 92, 67, 0.5); /* Terracotta */
-  box-shadow:
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
-    0 0 40px -8px rgba(192, 92, 67, 0.3),
-    0 16px 40px -12px rgba(0, 0, 0, 0.8);
-  transform: translateY(-4px);
-}
-
-/* Glass pill/button */
-.glass-pill {
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  transition: all 0.3s ease;
-}
-.glass-pill:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.25);
-}
-
-.hero-grid-bg {
-  background-image:
-    linear-gradient(rgba(74,144,184,0.055) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(74,144,184,0.055) 1px, transparent 1px);
-  background-size: 52px 52px;
-}
-
-/* Live dot pulse */
-@keyframes pulse-dot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(0.85); }
-}
-.live-dot {
-  animation: pulse-dot 1.8s ease-in-out infinite;
-}
-
-/* Shimmer on skill pills */
-@keyframes shimmer {
-  0% { background-position: -200% center; }
-  100% { background-position: 200% center; }
-}
-
-/* Scroll bar */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #262626; }
-::-webkit-scrollbar-thumb { background: #505050; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #C05C43; }
-
-@media (prefers-reduced-motion: reduce) {
-  .reveal { opacity: 1; transform: none; transition: none; }
-  .live-dot { animation: none; }
-  .ambient-blob { animation: none !important; }
-}
-
-@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-@keyframes wave-bar { 0% { transform: scaleY(0.4); } 100% { transform: scaleY(1); } }
-
-@media (max-width: 780px) {
-  .desk-nav { display: none !important; }
-  .mob-btn { display: flex !important; }
-}
-
-@media (max-width: 900px) {
-  .hero-inner { grid-template-columns: 1fr !important; gap: 32px !important; }
-  .hero-photo { display: none !important; }
-  .stats-row { flex-wrap: wrap; }
-  .stats-row > div { min-width: 40%; margin-bottom: 16px; }
-}
-
-@media (max-width: 860px) {
-  .about-grid { grid-template-columns: 1fr !important; gap: 28px !important; }
-}
-
-@media (max-width: 760px) {
-  .proj-grid { grid-template-columns: 1fr !important; }
-}
-
-@media (max-width: 640px) {
-  .skill-row { grid-template-columns: 1fr !important; gap: 10px !important; }
-}
-
-@media (max-width: 600px) {
-  .contact-grid { grid-template-columns: 1fr !important; }
-}
-
-/* Disable expensive filters during scroll for performance */
-body.scrolling-active .ambient-blob {
-  animation-play-state: paused;
-}
-
-body.scrolling-active .glass-strong,
-body.scrolling-active .glass {
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-}
-
-@media (max-width: 480px) {
-  .stats-row > div { min-width: 45%; }
-
-  .hero-inner { padding: 28px 4px !important; }
-
-  .agent-section { padding: 56px 12px !important; }
-  .agent-card { padding: 20px 16px !important; }
-  .agent-connect-btn { width: 100% !important; justify-content: center !important; }
-  .agent-disconnect-btn { width: 100% !important; justify-content: center !important; }
-  .jd-send-btn { width: 100% !important; justify-content: center !important; }
-  .jd-footer { flex-direction: column !important; gap: 10px !important; align-items: stretch !important; }
-  .agent-transcript { padding: 14px 14px !important; }
-  .agent-transcript p { font-size: 13px !important; }
-  .agent-jd-panel { padding: 16px !important; }
-  .agent-voice-card { padding: 20px 14px !important; }
-
-  .exp-header { flex-direction: column !important; align-items: flex-start !important; gap: 8px !important; }
-  .exp-meta { flex-wrap: wrap !important; }
-
-  .contact-item { padding: 16px 18px !important; }
-
-  .edu-inner { flex-direction: column !important; align-items: flex-start !important; gap: 10px !important; }
-  .edu-year { text-align: left !important; }
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Space_Grotesk, Inter, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import AmbientBackground from "@/components/Ambientbackground";
+import SmoothScroll from "@/components/SmoothScroll";
+import CustomCursor from "@/components/CustomCursor";
 import ScrollPerformanceHandler from "@/components/ScrollPerformanceHandler";
 
 const display = Space_Grotesk({
@@ -36,9 +38,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${display.variable} ${body.variable} ${mono.variable}`}>
       <body>
+        <CustomCursor />
         <AmbientBackground />
         <ScrollPerformanceHandler />
-        {children}
+        <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>
   );

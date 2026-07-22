@@ -22,25 +22,25 @@ export default async function ProjectPage({ params }: { params: { slug: string[]
   const content = fs.readFileSync(filePath, 'utf-8');
 
   return (
-    <div className="min-h-screen bg-[#0A0D14] py-16 px-6 md:px-12">
+    <div className="min-h-screen bg-bg py-16 px-6 md:px-12">
       <div className="max-w-4xl mx-auto">
         <BackButton />
         <article
           className="
             mt-8 p-8 md:p-12
-            glass-strong
-            prose prose-lg prose-invert
+            bg-card
+            prose prose-lg prose-primary
             max-w-none
-            prose-headings:text-white
-            prose-p:text-[#F0EDE8]/90
-            prose-li:text-[#F0EDE8]/90
-            prose-strong:text-white
-            prose-code:text-[#C05C43]
-            prose-a:text-[#C05C43]
+            prose-headings:text-primary
+            prose-p:text-secondary
+            prose-li:text-secondary
+            prose-strong:text-primary
+            prose-code:text-yellow-500
+            prose-a:text-yellow-500
             prose-a:no-underline
             hover:prose-a:underline
-            prose-blockquote:text-white
-            prose-blockquote:border-l-[#C05C43]
+            prose-blockquote:text-primary
+            prose-blockquote:border-l-yellow-500
             prose-img:rounded-xl
           "
         >

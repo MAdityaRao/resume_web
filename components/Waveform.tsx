@@ -11,8 +11,8 @@ type Props = {
 
 // Uniform color for a professional, non-AI look.
 const STOPS: [number, string][] = [
-  [0, "255, 255, 255"], // white
-  [1, "255, 255, 255"], // white
+  [0, "234, 179, 8"], // yellow-500
+  [1, "234, 179, 8"], // yellow-500
 ];
 
 function colorAt(t: number) {
@@ -73,12 +73,14 @@ export default function Waveform({ mode, getLevels, active = true, height = 160 
             0.12 +
             Math.abs(Math.sin(tRef.current * 0.6 + i * 0.35)) * 0.22 +
             Math.abs(Math.sin(tRef.current * 0.21 + i * 0.12)) * 0.12;
+        // If we have actual audio data, oscillate bars based on intensity
         } else if (active && (localData || remoteData)) {
           const idxL = localData ? Math.floor((i / n) * localData.length) : 0;
           const idxR = remoteData ? Math.floor((i / n) * remoteData.length) : 0;
           const vL = localData ? localData[idxL] / 255 : 0;
           const vR = remoteData ? remoteData[idxR] / 255 : 0;
-          target = 0.06 + Math.max(vL, vR) * 0.9;
+          // Scale intensity and apply a smooth pulse
+          target = 0.1 + Math.max(vL, vR) * 1.5;
         } else {
           target = 0.06 + Math.abs(Math.sin(tRef.current * 0.4 + i * 0.3)) * 0.05;
         }
@@ -88,7 +90,9 @@ export default function Waveform({ mode, getLevels, active = true, height = 160 
         const x = i * (barW + gap);
         const y = h - barH;
         const color = colorAt(i / (n - 1));
-        ctx.fillStyle = `rgba(${color},${mode === "ambient" ? 0.85 : 1})`;
+        ctx.fillStyle = `rgba(${color}, 1)`;
+        ctx.shadowColor = `rgba(${color}, 0.8)`;
+        ctx.shadowBlur = 10;
         const radius = Math.min(barW / 2, 3 * dpr);
         roundRect(ctx, x, y, barW, barH, radius);
         ctx.fill();

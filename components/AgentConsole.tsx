@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAgentSession } from "@/lib/useAgentSession";
 
+
 const SUGGESTED_QUESTIONS = [
   "Do you have experience with LLM agents like LangChain or LangGraph?",
   "Have you built real-time voice AI with LiveKit or WebRTC?",
@@ -32,39 +33,7 @@ function useElapsed(live: boolean) {
  * viewBox is a fixed 0-200 square so it scales cleanly at any container size (mobile-safe).
  */
 function RadialBars({ bars, live, reconnecting }: { bars: number[]; live: boolean; reconnecting: boolean }) {
-  const center = 100;
-  const innerRadius = 34;
-  const maxBarLength = 54;
-  const barCount = bars.length;
-  const active = live || reconnecting;
-
-  return (
-    <svg viewBox="0 0 200 200" className="absolute inset-0 w-full h-full overflow-visible" aria-hidden="true">
-      {bars.map((level, i) => {
-        const angle = (i / barCount) * Math.PI * 2 - Math.PI / 2;
-        const clamped = Math.max(0.05, Math.min(1, level));
-        const length = active ? 14 + clamped * maxBarLength : 8;
-        const x1 = center + innerRadius * Math.cos(angle);
-        const y1 = center + innerRadius * Math.sin(angle);
-        const x2 = center + (innerRadius + length) * Math.cos(angle);
-        const y2 = center + (innerRadius + length) * Math.sin(angle);
-        return (
-          <motion.line
-            key={i}
-            x1={x1}
-            y1={y1}
-            animate={{ x2, y2 }}
-            transition={{ duration: 0.12, ease: "easeOut" }}
-            stroke="currentColor"
-            strokeWidth={4}
-            strokeLinecap="round"
-            className={active ? "text-terracotta" : "text-faint"}
-            style={{ opacity: active ? 0.6 + clamped * 0.4 : 0.4 }}
-          />
-        );
-      })}
-    </svg>
-  );
+  // ... (this entire function is no longer used, you can remove it or keep it for reference)
 }
 
 export default function AgentConsole() {
@@ -93,12 +62,20 @@ export default function AgentConsole() {
     }
     let raf: number;
     const tick = () => {
+      // Use getLevels() from useAgentSession which samples from LiveKit analyser nodes
       const levels = getLevels();
 
-      if (levels.length) {
-        setBars(levels);
+      if (levels.length > 0) {
+        // Apply smoothing: keep previous 60% and new 40%
+        setBars((prev) =>
+          levels.map((l, i) => prev[i] * 0.6 + l * 0.4)
+        );
       } else {
-        setBars((prev) => prev.map(() => 0.15 + Math.random() * 0.5));
+        // Fallback: idle breathing
+        const time = Date.now() / 500;
+        setBars(Array(24).fill(0).map((_, i) =>
+          0.1 + Math.sin(time + i * 0.5) * 0.05
+        ));
       }
 
       raf = requestAnimationFrame(tick);
@@ -133,24 +110,24 @@ export default function AgentConsole() {
           <div
             className={`absolute -inset-1 rounded-[2rem] -z-10 blur-2xl transition-opacity duration-700 ${
               live
-                ? "opacity-70 bg-gradient-to-br from-terracotta/30 via-transparent to-violet/30"
-                : "opacity-25 bg-gradient-to-br from-faint/20 to-terracotta/10"
+                ? "opacity-70 bg-gradient-to-br from-yellow-500/30 via-transparent to-violet/30"
+                : "opacity-25 bg-gradient-to-br from-faint/20 to-yellow-500/10"
             }`}
           />
 
-          <div className="relative glass-strong rounded-[2rem] overflow-hidden agent-card w-full border border-border">
+          <div className="relative glass-strong rounded-[2rem] overflow-hidden agent-card w-full border-2 border-black bg-white">
             {/* Header readout */}
-            <div className="relative px-4 sm:px-6 pt-6 pb-4 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.2em] text-muted">
+            <div className="relative px-4 sm:px-6 pt-6 pb-4 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.2em] text-black">
               <span>Voice Interface</span>
               <span
                 className={
                   live
-                    ? "text-terracotta"
+                    ? "text-yellow-600 animate-pulse"
                     : reconnecting
-                    ? "text-terracotta animate-pulse"
+                    ? "text-yellow-600 animate-pulse"
                     : status === "error"
-                    ? "text-coral"
-                    : "text-faint"
+                    ? "text-red-500"
+                    : "text-black"
                 }
               >
                 {live && `SESSION ${elapsed}`}
@@ -162,7 +139,7 @@ export default function AgentConsole() {
             </div>
 
             {errorMessage && status === "error" && (
-              <div className="mx-6 mb-2 -mt-2 px-3 py-2 rounded-lg bg-coral/10 border border-coral/20 text-coral text-xs font-mono">
+              <div className="mx-6 mb-2 -mt-2 px-3 py-2 rounded-lg bg-red-100 border border-red-200 text-red-600 text-xs font-mono">
                 {errorMessage}
               </div>
             )}
@@ -173,28 +150,28 @@ export default function AgentConsole() {
                 {/* Soft pulse ring behind bars when live */}
                 {live && (
                   <motion.div
-                    className="absolute inset-0 rounded-full bg-terracotta/5"
-                    animate={{ scale: [1, 1.08, 1], opacity: [0.5, 0.15, 0.5] }}
-                    transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute inset-0 rounded-full bg-yellow-500/20"
+                    animate={{ scale: [1, 1.15, 1], opacity: [0.6, 0.2, 0.6] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                   />
                 )}
 
                 {/* Radial waveform hugging the button */}
-                <RadialBars bars={bars} live={live} reconnecting={reconnecting} />
+                
 
                 {/* Core connect/disconnect button — icon + label live inside the circle */}
                 <motion.button
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={live || reconnecting ? disconnect : connect}
                   disabled={connecting}
                   aria-label={live ? "Stop voice session" : "Start voice session"}
-                  className={`relative z-10 w-24 h-24 sm:w-28 sm:h-28 rounded-full flex flex-col items-center justify-center gap-1 border transition-all disabled:opacity-60 disabled:cursor-not-allowed ${
+                  className={`relative z-10 w-28 h-28 sm:w-32 sm:h-32 rounded-full flex flex-col items-center justify-center gap-2 border-2 transition-all disabled:opacity-60 disabled:cursor-not-allowed ${
                     live
-                      ? "bg-terracotta/10 border-terracotta/30 text-terracotta shadow-glow-terracotta hover:border-coral/40 hover:text-coral"
+                      ? "bg-black border-yellow-500 text-yellow-500 shadow-[0_0_20px_rgba(234,179,8,0.3)] hover:border-red-500 hover:text-red-500"
                       : reconnecting
-                      ? "bg-terracotta/10 border-terracotta/30 text-terracotta"
-                      : "bg-ink text-bg hover:bg-ink/90 border-ink"
+                      ? "bg-black border-yellow-500 text-yellow-500"
+                      : "bg-yellow-500 text-black hover:bg-yellow-400 border-yellow-500"
                   }`}
                 >
                   {live ? <Square size={20} /> : <Mic size={24} className="sm:hidden" />}
@@ -205,7 +182,7 @@ export default function AgentConsole() {
                 </motion.button>
               </div>
 
-              <p className="mt-5 font-mono text-[11px] text-muted uppercase tracking-widest text-center px-4">
+              <p className="mt-5 font-mono text-[11px] text-black/60 uppercase tracking-widest text-center px-4">
                 {live && "Active — listening"}
                 {reconnecting && "Reconnecting"}
                 {connecting && "Connecting"}
@@ -215,18 +192,18 @@ export default function AgentConsole() {
             </div>
 
             {/* Transcript + suggestions — fixed 80/20 split so quick-asks never disappear */}
-            <div className="relative flex flex-col h-64 sm:h-72 border-t border-border bg-elevated/40">
+            <div className="relative flex flex-col h-64 sm:h-72 border-t-2 border-black bg-gray-50">
               {/* Chat area — ~80% */}
               <div
                 ref={scrollRef}
-                className="flex-[4] min-h-0 overflow-y-auto px-4 sm:px-6 py-4 space-y-3 font-mono text-[13px] sm:text-sm"
+                className="flex-[4] min-h-0 overflow-y-auto px-4 sm:px-6 py-4 space-y-3 font-mono text-[13px] sm:text-sm scroll-smooth"
               >
                 {!live ? (
-                  <div className="h-full flex items-center justify-center text-faint text-xs italic text-center px-4">
+                  <div className="h-full flex items-center justify-center text-black/50 text-xs italic text-center px-4">
                     &gt; connect to agent to unlock chat...
                   </div>
                 ) : transcript.length === 0 ? (
-                  <div className="h-full flex items-center justify-center text-faint text-xs italic">
+                  <div className="h-full flex items-center justify-center text-black/50 text-xs italic">
                     &gt; awaiting transmission...
                   </div>
                 ) : (
@@ -238,10 +215,10 @@ export default function AgentConsole() {
                         animate={{ opacity: 1, y: 0 }}
                         className="flex gap-2"
                       >
-                        <span className={line.from === "you" ? "text-muted" : "text-terracotta"}>
+                        <span className={line.from === "you" ? "text-black/50" : "text-yellow-600"}>
                           {line.from === "you" ? "you>" : "ai>"}
                         </span>
-                        <span className="text-ink break-words">{line.text}</span>
+                        <span className="text-black break-words">{line.text}</span>
                       </motion.div>
                     ))}
                   </AnimatePresence>
@@ -250,14 +227,14 @@ export default function AgentConsole() {
 
               {/* Suggested questions — ~20%, persistent, swipeable on mobile, never disappears */}
               <div
-                className="flex-1 min-h-0 border-t border-border/70 flex items-center gap-2 overflow-x-auto snap-x snap-mandatory scroll-px-4 px-4 py-2"
+                className="flex-1 min-h-0 border-t-2 border-black/10 flex items-center gap-2 overflow-x-auto snap-x snap-mandatory scroll-px-4 px-4 py-2"
                 style={{
                   maskImage: "linear-gradient(to right, transparent, black 16px, black calc(100% - 16px), transparent)",
                   WebkitMaskImage:
                     "linear-gradient(to right, transparent, black 16px, black calc(100% - 16px), transparent)",
                 }}
               >
-                <span className="shrink-0 text-[9px] font-mono uppercase tracking-widest text-faint pr-1">
+                <span className="shrink-0 text-[9px] font-mono uppercase tracking-widest text-yellow-600 pr-1">
                   Try
                 </span>
                 {SUGGESTED_QUESTIONS.map((q) => (
@@ -266,7 +243,7 @@ export default function AgentConsole() {
                     type="button"
                     disabled={!live}
                     onClick={() => handleSuggestion(q)}
-                    className="shrink-0 snap-start whitespace-nowrap text-[11px] font-mono px-3 py-2 sm:py-1.5 rounded-full border border-border bg-panel/60 text-muted hover:border-terracotta/40 hover:text-terracotta active:scale-95 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                    className="shrink-0 snap-start whitespace-nowrap text-[11px] font-mono px-3 py-2 sm:py-1.5 rounded-full border border-black/20 bg-white text-black hover:border-yellow-500 hover:text-yellow-600 active:scale-95 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
                   >
                     {q}
                   </button>
@@ -276,20 +253,20 @@ export default function AgentConsole() {
             </div>
 
             {/* Command input */}
-            <form onSubmit={handleSend} className="border-t border-border bg-elevated/40 px-4 sm:px-6 py-3 sm:py-4">
-              <div className="flex items-center rounded-xl border border-border bg-panel/60 px-4 py-2 gap-2">
-                <span className={`shrink-0 ${live ? "text-terracotta" : "text-faint"}`}>&gt;</span>
+            <form onSubmit={handleSend} className="border-t-2 border-black bg-white px-4 sm:px-6 py-3 sm:py-4">
+              <div className="flex items-center rounded-xl border border-black/20 bg-gray-50 px-4 py-2 gap-2">
+                <span className={`shrink-0 ${live ? "text-yellow-600" : "text-black/50"}`}>&gt;</span>
                 <input
                   value={draft}
                   disabled={!live}
                   onChange={(e) => setDraft(e.target.value)}
-                  className="flex-1 bg-transparent outline-none text-ink min-w-0 placeholder-faint text-base"
+                  className="flex-1 bg-transparent outline-none text-black min-w-0 placeholder-black/30 text-base"
                   placeholder={live ? "Ask something..." : "Connect to chat..."}
                 />
                 <button
                   type="submit"
                   disabled={!live || !draft.trim()}
-                  className="flex h-9 w-9 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-terracotta text-white hover:scale-105 active:scale-95 transition disabled:opacity-40 shrink-0"
+                  className="flex h-9 w-9 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-yellow-500 text-black hover:scale-105 active:scale-95 transition disabled:opacity-40 shrink-0"
                 >
                   <Send size={14} />
                 </button>

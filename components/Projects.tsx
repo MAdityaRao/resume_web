@@ -5,80 +5,53 @@ import { motion, AnimatePresence } from "framer-motion";
 import { projects } from "@/lib/content";
 
 export default function Projects() {
-  const [showAll, setShowAll] = useState(false);
-  const displayedProjects = showAll ? projects : projects.slice(0, 4);
+  const [activeId, setActiveId] = useState<string | null>(null);
 
   return (
-    <section id="work" className="px-6 py-24">
-      <div className="mx-auto max-w-6xl">
-        <motion.h2
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-4xl font-display font-bold text-white mb-16 text-center"
-        >
-          Selected Projects
-        </motion.h2>
-        <div className="grid md:grid-cols-2 gap-8 proj-grid">
-          <AnimatePresence>
-            {displayedProjects.map((p, i) => (
-              <motion.article
-                key={p.id}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-60px" }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ delay: (i % 2) * 0.1, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                whileHover={{ y: -8 }}
-                className="group glass glass-hover rounded-3xl p-8 relative overflow-hidden"
-              >
-                <div className="relative z-10">
-                  <div className="flex justify-between items-start mb-6">
-                    <h3 className="text-2xl font-bold text-white group-hover:text-terracotta transition-colors">
-                      {p.name}
-                    </h3>
-                    {p.metric && (
-                      <span className="text-xs font-mono text-terracotta bg-terracotta/10 px-3 py-1 rounded-full border border-terracotta/20">
-                        {p.metric}
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-slate-400 mb-6 line-clamp-3">{p.points.join(" ")}</p>
-                  <div className="flex flex-wrap gap-2 mb-8">
-                    {p.stack.map((s) => (
-                      <span key={s} className="px-3 py-1 rounded-md bg-white/5 text-xs text-slate-300 font-mono">
-                        {s}
+    <section id="work" className="w-full py-16 md:py-24 px-4 md:px-6">
+      <div className="mx-auto max-w-4xl">
+        <h2 className="text-3xl md:text-clamp-h2 font-display font-bold text-primary mb-12 md:mb-20 tracking-tighter">
+          Selected Work
+        </h2>
+
+        <div className="flex gap-6 overflow-x-auto pb-8 snap-x scrollbar-hide">
+          {projects.map((p, i) => (
+            <motion.div
+              key={p.id}
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              className="group relative flex flex-col p-6 md:p-8 rounded-3xl border border-border bg-card/30 hover:bg-card transition-all duration-500 overflow-hidden snap-start w-80 shrink-0"
+            >
+              <div className="flex flex-col h-full">
+                <div className="relative z-10 w-full flex-grow">
+                  <h3 className="text-xl font-display font-bold text-primary group-hover:text-yellow-500 transition-colors">
+                    {p.name}
+                  </h3>
+                  <p className="text-secondary mt-1 text-sm">{p.role}</p>
+
+                  <div className="flex flex-wrap gap-2 mt-4">
+                    {p.stack.map((tech) => (
+                      <span key={tech} className="px-3 py-1 text-xs font-mono bg-white border border-border rounded-full text-secondary">
+                        {tech}
                       </span>
                     ))}
                   </div>
-                  {p.link && (
-                    <a
-                      href={p.link}
-                      target="_blank"
-                      className="inline-flex items-center text-sm font-semibold text-white hover:text-terracotta transition-colors"
-                    >
-                      Read README <span className="ml-2 group-hover:translate-x-1 transition-transform inline-block">→</span>
-                    </a>
-                  )}
                 </div>
-                <div className="absolute inset-0 bg-gradient-to-br from-terracotta/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              </motion.article>
-            ))}
-          </AnimatePresence>
-        </div>
 
-        {projects.length > 0 && (
-          <div className="text-center mt-16">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.96 }}
-              onClick={() => setShowAll(!showAll)}
-              className="px-8 py-3 rounded-full bg-terracotta/10 border border-terracotta/20 text-terracotta font-semibold hover:bg-terracotta/20 hover:shadow-glow transition-all cursor-pointer z-20 relative"
-            >
-              {showAll ? "Show Less" : "View All Projects"}
-            </motion.button>
-          </div>
-        )}
+                <div className="mt-6">
+                  <a
+                    href={p.link || "#"}
+                    className="inline-block px-4 py-2 rounded-full border border-yellow-500 text-yellow-500 text-sm hover:bg-yellow-500 hover:text-white transition-colors"
+                  >
+                    Read More
+                  </a>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   );

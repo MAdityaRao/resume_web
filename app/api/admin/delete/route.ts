@@ -10,8 +10,12 @@ export async function POST(req: Request) {
 
   try {
     const { id } = await req.json();
-    if (!id) {
-      return NextResponse.json({ success: false, message: "ID required" }, { status: 400 });
+    if (!id || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) {
+      return NextResponse.json({ success: false, message: "Invalid ID format" }, { status: 400 });
+    }
+
+    if (req.headers.get("X-Requested-With") !== "XMLHttpRequest") {
+      return NextResponse.json({ success: false, message: "Forbidden" }, { status: 403 });
     }
 
     await pool.query("DELETE FROM resume_agent_logs WHERE id = $1", [id]);
