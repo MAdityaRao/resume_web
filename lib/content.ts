@@ -5,6 +5,7 @@ export const profile = {
   location: "Udupi, Karnataka, India",
   email: "madityara5@gmail.com",
   github: "https://github.com/MAdityaRao",
+  linkedin: "https://www.linkedin.com/in/aditya-rao-81832132b/",
   githubHandle: "MAdityaRao",
   quote: "I build AI systems that work in real environments, under real constraints.",
   stats: { repos: 14, followers: 3, following: 5 },

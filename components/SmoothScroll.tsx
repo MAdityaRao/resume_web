@@ -9,13 +9,13 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     // Only initialize if not already running
     if (!lenisRef.current) {
       const lenis = new Lenis({
-        duration: 0.8, // Decreased for snappier response
-        easing: (t) => 1 - Math.pow(1 - t, 4), // Smoother acceleration
+        duration: 0.7,
+        easing: (t) => 1 - Math.pow(1 - t, 4),
         smoothWheel: true,
-        wheelMultiplier: 1.2, // Slightly faster scrolling
-        touchMultiplier: 1.5,
+        wheelMultiplier: 1,
+        touchMultiplier: 1.2,
         infinite: false,
-        syncTouch: true, // Syncs touch scrolling for better smoothness
+        syncTouch: true,
       });
 
       lenisRef.current = lenis;

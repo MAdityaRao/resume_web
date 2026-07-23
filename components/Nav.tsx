@@ -38,9 +38,9 @@ export default function Nav() {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ type: "spring", stiffness: 80, damping: 18 }}
-      className="fixed top-0 inset-x-0 z-50 bg-bg/80 backdrop-blur-md border-b border-border"
+      className="fixed top-0 inset-x-0 z-50 bg-bg/90 backdrop-blur-sm border-b border-border"
     >
-      <div className="mx-auto max-w-6xl px-6 h-16 flex items-center justify-between">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
         <a
           href="#top"
           onClick={(e) => handleScroll(e, "#top")}
@@ -110,12 +110,12 @@ export default function Nav() {
             transition={{ duration: 0.3 }}
             className="md:hidden bg-bg border-t border-border overflow-hidden"
           >
-            <nav className="flex flex-col p-6 gap-2 font-mono text-sm uppercase text-secondary">
+            <nav className="flex flex-col p-4 gap-2 font-mono text-sm uppercase text-secondary">
               {links.map((l, i) => (
                 <motion.a
                   key={l.href}
                   href={l.href}
-                  className="px-4 py-3.5 hover:text-primary transition-colors"
+                  className="w-full rounded-xl px-4 py-3.5 hover:text-primary transition-colors"
                   onClick={(e) => handleScroll(e, l.href)}
                 >
                   {l.label}

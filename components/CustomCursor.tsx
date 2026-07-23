@@ -39,8 +39,6 @@ export default function CustomCursor() {
       }}
       transition={{ type: 'spring', damping: 20, stiffness: 300, mass: 0.5 }}
       style={{ backgroundColor: isHovering ? '#000000' : '#000000', color: '#FFFFFF' }}
-    >
-      {isHovering && "VIEW"}
-    </motion.div>
+    />
   );
 }

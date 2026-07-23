@@ -15,7 +15,7 @@ export default function Skills() {
         >
           Technical Expertise
         </motion.h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 skill-row">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 skill-row">
           {skills.map((group, i) => (
             <motion.div
               key={group.group}
@@ -24,7 +24,7 @@ export default function Skills() {
               viewport={{ once: true, margin: "-40px" }}
               transition={{ delay: (i % 3) * 0.08, duration: 0.5 }}
               whileHover={{ y: -6 }}
-              className="bg-card p-6 rounded-2xl border border-border"
+              className="bg-card p-5 sm:p-6 rounded-2xl border border-border min-h-[180px]"
             >
               <h3 className="text-primary font-semibold mb-6 flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-yellow-500 animate-pulse" />

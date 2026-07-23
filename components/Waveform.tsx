@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 
 type Props = {
   mode: "ambient" | "live";
-  getLevels?: () => { local: Uint8Array | null; remote: Uint8Array | null };
+  getLevels?: () => { local: Uint8Array | null; remote: Uint8Array | null } | number[] | null;
   active?: boolean;
   height?: number;
 };
@@ -28,8 +28,9 @@ export default function Waveform({ mode, getLevels, active = true, height = 160 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    const maybeCtx = canvas.getContext("2d");
+    if (!maybeCtx) return;
+    const ctx = maybeCtx;
 
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const BAR_COUNT = 48;
@@ -40,16 +41,20 @@ export default function Waveform({ mode, getLevels, active = true, height = 160 
     function resize() {
       if (!canvas) return;
       const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
+
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.scale(dpr, dpr);
     }
     resize();
     window.addEventListener("resize", resize);
 
     function frame() {
       if (!canvas || !ctx) return;
-      const w = canvas.width;
-      const h = canvas.height;
+      const w = canvas.clientWidth;
+const h = canvas.clientHeight;
       ctx.clearRect(0, 0, w, h);
       tRef.current += 0.045;
 
@@ -60,10 +65,15 @@ export default function Waveform({ mode, getLevels, active = true, height = 160 
 
       let localData: Uint8Array | null = null;
       let remoteData: Uint8Array | null = null;
+      let numericLevels: number[] | null = null;
       if (mode === "live" && getLevels) {
         const levels = getLevels();
-        localData = levels.local;
-        remoteData = levels.remote;
+        if (Array.isArray(levels)) {
+          numericLevels = levels;
+        } else if (levels) {
+          localData = levels.local;
+          remoteData = levels.remote;
+        }
       }
 
       for (let i = 0; i < n; i++) {
@@ -74,6 +84,9 @@ export default function Waveform({ mode, getLevels, active = true, height = 160 
             Math.abs(Math.sin(tRef.current * 0.6 + i * 0.35)) * 0.22 +
             Math.abs(Math.sin(tRef.current * 0.21 + i * 0.12)) * 0.12;
         // If we have actual audio data, oscillate bars based on intensity
+        } else if (active && numericLevels) {
+          const idx = Math.min(n - 1, Math.floor((i / n) * numericLevels.length));
+          target = 0.1 + numericLevels[idx] * 1.5;
         } else if (active && (localData || remoteData)) {
           const idxL = localData ? Math.floor((i / n) * localData.length) : 0;
           const idxR = remoteData ? Math.floor((i / n) * remoteData.length) : 0;
@@ -111,7 +124,7 @@ export default function Waveform({ mode, getLevels, active = true, height = 160 
   return (
     <canvas
       ref={canvasRef}
-      style={{ width: "100%", height }}
+      style={{ width: "100%", height: "100%", display: "block" }}
       aria-hidden="true"
     />
   );

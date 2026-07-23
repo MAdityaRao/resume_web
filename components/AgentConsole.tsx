@@ -3,6 +3,7 @@ import { Send, Mic, Square } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAgentSession } from "@/lib/useAgentSession";
+import Waveform from "@/components/Waveform";
 
 
 const SUGGESTED_QUESTIONS = [
@@ -97,7 +98,7 @@ export default function AgentConsole() {
   }
 
   return (
-    <section id="agent" className="px-6 py-24 agent-section relative">
+    <section id="agent" className="px-4 py-10 sm:px-6 sm:py-16 agent-section relative">
       <div className="mx-auto max-w-3xl">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -115,7 +116,7 @@ export default function AgentConsole() {
             }`}
           />
 
-          <div className="relative glass-strong rounded-[2rem] overflow-hidden agent-card w-full border-2 border-black bg-white">
+          <div className="relative glass-strong rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden agent-card w-full border-2 border-black bg-white">
             {/* Header readout */}
             <div className="relative px-4 sm:px-6 pt-6 pb-4 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.2em] text-black">
               <span>Voice Interface</span>
@@ -146,7 +147,7 @@ export default function AgentConsole() {
 
             {/* Orb area */}
             <div className="relative flex flex-col items-center pt-5 pb-6 sm:pt-6 sm:pb-8 px-4">
-              <div className="relative w-44 h-44 sm:w-52 sm:h-52 flex items-center justify-center shrink-0">
+              <div className="relative w-40 h-40 sm:w-52 sm:h-52 flex items-center justify-center shrink-0 mx-auto">
                 {/* Soft pulse ring behind bars when live */}
                 {live && (
                   <motion.div
@@ -157,7 +158,14 @@ export default function AgentConsole() {
                 )}
 
                 {/* Radial waveform hugging the button */}
-                
+                <div className="pointer-events-none absolute inset-[-10px] sm:inset-[-14px] rounded-full overflow-hidden">
+                  <Waveform
+                    mode={active ? "live" : "ambient"}
+                    getLevels={getLevels}
+                    active={active}
+                    height={220}
+                  />
+                </div>
 
                 {/* Core connect/disconnect button — icon + label live inside the circle */}
                 <motion.button
@@ -166,7 +174,7 @@ export default function AgentConsole() {
                   onClick={live || reconnecting ? disconnect : connect}
                   disabled={connecting}
                   aria-label={live ? "Stop voice session" : "Start voice session"}
-                  className={`relative z-10 w-28 h-28 sm:w-32 sm:h-32 rounded-full flex flex-col items-center justify-center gap-2 border-2 transition-all disabled:opacity-60 disabled:cursor-not-allowed ${
+                  className={`relative z-10 w-24 h-24 sm:w-32 sm:h-32 rounded-full flex flex-col items-center justify-center gap-2 border-2 transition-all disabled:opacity-60 disabled:cursor-not-allowed ${
                     live
                       ? "bg-black border-yellow-500 text-yellow-500 shadow-[0_0_20px_rgba(234,179,8,0.3)] hover:border-red-500 hover:text-red-500"
                       : reconnecting

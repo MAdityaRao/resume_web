@@ -11,9 +11,9 @@ export default function Contact() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="bg-card rounded-3xl p-12 relative overflow-hidden border border-border"
+          className="bg-card rounded-3xl p-5 sm:p-8 md:p-12 relative overflow-hidden border border-border"
         >
-          <h2 className="text-4xl font-display font-bold text-primary mb-6">Let's work together.</h2>
+          <h2 className="text-3xl sm:text-4xl font-display font-bold text-primary mb-6">Let's work together.</h2>
           <p className="text-secondary mb-8 leading-relaxed">
             I am currently open to discussing new projects and opportunities in AI agent development.
           </p>

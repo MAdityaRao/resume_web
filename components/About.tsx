@@ -18,14 +18,14 @@ export default function About() {
           Journey
         </motion.h2>
 
-        <div className="grid lg:grid-cols-[1fr_2fr] gap-12 md:gap-16 about-grid">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-10 md:gap-16 about-grid">
           {/* Profile Image */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="relative h-[400px] w-full rounded-3xl overflow-hidden glass-strong bg-border"
+            className="relative h-[260px] sm:h-[330px] lg:h-[400px] w-full rounded-3xl overflow-hidden glass-strong bg-border"
           >
             <Image src="/aditya.jpg" alt="Aditya" fill className="object-cover object-top" priority />
             <div className="absolute bottom-6 left-6 right-6 p-4 bg-white/80 backdrop-blur rounded-xl text-primary text-sm font-medium z-20 shadow-sm">
@@ -46,10 +46,10 @@ export default function About() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true, margin: "-40px" }}
                     transition={{ delay: i * 0.1, duration: 0.5 }}
-                    className="relative pl-8 border-l border-border"
+                    className="relative pl-6 sm:pl-8 border-l border-border"
                   >
                     <span className="absolute -left-1.5 top-2 w-3 h-3 rounded-full bg-yellow-500" />
-                    <div className="flex justify-between items-start mb-2">
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1 mb-2">
                       <h3 className="text-xl font-bold text-primary">{job.role}</h3>
                       <span className="text-sm font-mono text-yellow-500">{job.period}</span>
                     </div>
@@ -74,7 +74,7 @@ export default function About() {
                 className="relative pl-8 border-l border-border"
               >
                 <span className="absolute -left-1.5 top-2 w-3 h-3 rounded-full bg-yellow-500" />
-                <div className="flex justify-between items-start mb-2">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1 mb-2">
                   <h3 className="text-xl font-bold text-primary">{education.degree}</h3>
                   <span className="text-sm font-mono text-yellow-500">{education.period}</span>
                 </div>

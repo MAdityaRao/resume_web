@@ -11,7 +11,7 @@ import Reveal from "@/components/Reveal";
 
 export default function Home() {
   return (
-    <main className="bg-bg text-primary selection:bg-yellow-500/30 selection:text-white">
+    <main className="overflow-x-hidden bg-bg text-primary selection:bg-yellow-500/30 selection:text-white">
       <Nav />
 
       {/* Each section is a full-viewport container for cinematic flow */}
