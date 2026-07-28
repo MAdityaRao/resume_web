@@ -26,6 +26,9 @@ export default function Projects() {
     const wrapper = track.parentElement;
     const wrapperRect = wrapper?.getBoundingClientRect();
 
+    // Early return if on mobile to avoid heavy calculations
+    if (typeof window !== 'undefined' && window.innerWidth < 768) return;
+
     if (activeId) {
       const card = cardRefs.current[activeId];
       if (card && wrapperRect) {
@@ -45,28 +48,30 @@ export default function Projects() {
     });
   }, [hoveredId, selectedId]);
 
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
+useEffect(() => {
+  const track = trackRef.current;
+  if (!track) return;
 
-    const handleScroll = () => {
-      if (rafRef.current !== null) return;
-      rafRef.current = requestAnimationFrame(() => {
-        rafRef.current = null;
-        updateOrbit();
-      });
-    };
+  const handleScroll = () => {
+    if (rafRef.current !== null) return;
+    rafRef.current = requestAnimationFrame(() => {
+      rafRef.current = null;
+      // Clear tap-selection once the user scrolls the carousel on touch devices
+      if (selectedId) setSelectedId(null);
+      updateOrbit();
+    });
+  };
 
-    updateOrbit();
-    track.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", handleScroll);
+  updateOrbit();
+  track.addEventListener("scroll", handleScroll, { passive: true });
+  window.addEventListener("resize", handleScroll);
 
-    return () => {
-      track.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleScroll);
-      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
-    };
-  }, [updateOrbit]);
+  return () => {
+    track.removeEventListener("scroll", handleScroll);
+    window.removeEventListener("resize", handleScroll);
+    if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+  };
+}, [updateOrbit, selectedId]);
 
   useEffect(() => {
     updateOrbit();
@@ -82,7 +87,7 @@ export default function Projects() {
         <div className="relative overflow-visible py-6 md:py-8">
           <motion.div
             aria-hidden="true"
-            className="pointer-events-none absolute z-20 h-32 w-32 rounded-full border-[3px] border-yellow-500/90 bg-yellow-500/20 shadow-[0_0_90px_rgba(234,179,8,0.6)] blur-3xl"
+            className="hidden md:block pointer-events-none absolute z-20 h-32 w-32 rounded-full border-[3px] border-yellow-500/90 bg-yellow-500/20 shadow-[0_0_90px_rgba(234,179,8,0.6)] blur-3xl"
             animate={{
               x: circlePos.x,
               y: circlePos.y,
@@ -94,8 +99,8 @@ export default function Projects() {
           />
           <div
             ref={trackRef}
-            className="relative z-10 flex gap-4 md:gap-6 overflow-x-auto pb-8 snap-x snap-mandatory scrollbar-hide overscroll-x-contain px-3 md:px-0"
-            style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-x', scrollPadding: '0 1rem' }}
+            className="relative z-10 flex gap-4 md:gap-6 overflow-x-auto pb-8 snap-x snap-proximity scrollbar-hide overscroll-x-contain px-3 md:px-0"
+            style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-x pan-y', scrollPadding: '0 1rem' }}
           >
             {projects.map((p, i) => (
             <motion.div
@@ -109,7 +114,10 @@ export default function Projects() {
               transition={{ delay: i * 0.1, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
               onMouseEnter={() => setHoveredId(p.id)}
               onMouseLeave={() => setHoveredId(null)}
-              onClick={() => setSelectedId(p.id)}
+              onClick={() => {
+  if (hoveredId) return; // desktop: hover already drives the circle
+  setSelectedId((prev) => (prev === p.id ? null : p.id));
+}}
               className="group relative flex flex-col p-5 md:p-8 rounded-3xl border border-border bg-card/30 hover:bg-card transition-all duration-500 overflow-hidden snap-center w-[84vw] max-w-[20rem] sm:w-80 shrink-0 cursor-pointer"
               animate={selectedId === p.id ? { scale: 1.03 } : hoveredId === p.id ? { scale: 1.02 } : { scale: 1 }}
             >
